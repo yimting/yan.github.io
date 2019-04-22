@@ -105,11 +105,11 @@
 <meta property="og:description" content="摘要：HBase是一种 “NoSQL” 数据库. NoSQL是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/WebUi.png">
-<meta property="og:image" content="https://pic1.zhimg.com/v2-a5af40208819e62d5c77003de3d50030_r.png">
+<meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/架构.png">
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/HBaseArchitecture-Blog-Fig4.png">
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/删除原理.png">
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/删除表.png">
-<meta property="og:updated_time" content="2019-04-22T12:52:19.007Z">
+<meta property="og:updated_time" content="2019-04-22T13:05:29.148Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hbase--漫漫之路">
 <meta name="twitter:description" content="摘要：HBase是一种 “NoSQL” 数据库. NoSQL是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。">
@@ -377,7 +377,7 @@
                 
               
 
-              <time title="创建时间：2019-04-22 00:03:28 / 修改时间：20:52:19" itemprop="dateCreated datePublished" datetime="2019-04-22T00:03:28+08:00">2019-04-22</time>
+              <time title="创建时间：2019-04-22 00:03:28 / 修改时间：21:05:29" itemprop="dateCreated datePublished" datetime="2019-04-22T00:03:28+08:00">2019-04-22</time>
             
 
             
@@ -437,7 +437,6 @@
         <blockquote>
 <p>摘要：HBase是一种 “NoSQL” 数据库. <code>NoSQL</code>是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。<a id="more"></a></p>
 </blockquote>
-<p>[TOC]</p>
 <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><h2 id="Hbase是什么"><a href="#Hbase是什么" class="headerlink" title="Hbase是什么"></a>Hbase是什么</h2><p>​    HBase是一种构建与Hadoop架构之上的 <code>NoSQL</code> 数据库. <code>NoSQL</code>是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。有许多种 NoSQL 数据库: BerkeleyDB 是本地 NoSQL 数据库例子, 而 HBase 是大型分布式数据库。 技术上来说, HBase 更像是”数据存储(Data Store)” 多于 “数据库(Data Base)”。因为缺少很多RDBMS特性, 如列类型，第二索引，触发器，高级查询语言等.</p>
 <p>​    然而, HBase 有许多特征同时支持线性化和模块化扩充。 HBase 集群通过增加RegionServers进行扩充。 它可以放在普通的服务器中。例如，如果集群从10个扩充到20个RegionServer，存储空间和处理容量都同时翻倍。 RDBMS 也能很好扩充， 但仅对一个点 - 特别是对一个单独数据库服务器的大小 - 同时，为了更好的性能，需要特殊的硬件和存储设备。 HBase 特性：</p>
 <ul>
@@ -455,7 +454,7 @@
 <p>启动Hbase后，可以打开Web界面</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://ip_addr:16010</span><br></pre></td></tr></table></figure>
 <p><img src="/2019/04/22/Hbase-漫漫之路/WebUi.png" alt="webui"></p>
-<h2 id="Hbase的架构是什么"><a href="#Hbase的架构是什么" class="headerlink" title="Hbase的架构是什么"></a>Hbase的架构是什么</h2><p><img src="https://pic1.zhimg.com/v2-a5af40208819e62d5c77003de3d50030_r.png" alt="架构图"></p>
+<h2 id="Hbase的架构是什么"><a href="#Hbase的架构是什么" class="headerlink" title="Hbase的架构是什么"></a>Hbase的架构是什么</h2><p><img src="/2019/04/22/Hbase-漫漫之路/架构.png" alt="架构图"></p>
 <p><strong>Client</strong></p>
 <ul>
 <li>包含访问Hbase的接口并且维护cache从而加快对Hbase的访问</li>
