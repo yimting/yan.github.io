@@ -96,18 +96,24 @@
 
 
 
-  <meta name="description" content="介绍Hbase是什么Hbase的架构是什么Hbase怎样工作的Hbase有什么好处实践">
+  <meta name="description" content="摘要：HBase是一种 “NoSQL” 数据库. NoSQL是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。">
 <meta name="keywords" content="Hbase">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hbase--漫漫之路">
 <meta property="og:url" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/index.html">
 <meta property="og:site_name" content="Baki&#39;Blog">
-<meta property="og:description" content="介绍Hbase是什么Hbase的架构是什么Hbase怎样工作的Hbase有什么好处实践">
+<meta property="og:description" content="摘要：HBase是一种 “NoSQL” 数据库. NoSQL是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-04-21T16:03:28.460Z">
+<meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/WebUi.png">
+<meta property="og:image" content="https://pic1.zhimg.com/v2-a5af40208819e62d5c77003de3d50030_r.png">
+<meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/HBaseArchitecture-Blog-Fig4.png">
+<meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/删除原理.png">
+<meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/删除表.png">
+<meta property="og:updated_time" content="2019-04-22T12:52:19.007Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hbase--漫漫之路">
-<meta name="twitter:description" content="介绍Hbase是什么Hbase的架构是什么Hbase怎样工作的Hbase有什么好处实践">
+<meta name="twitter:description" content="摘要：HBase是一种 “NoSQL” 数据库. NoSQL是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。">
+<meta name="twitter:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/WebUi.png">
 
 
 
@@ -371,9 +377,13 @@
                 
               
 
-              <time title="创建时间：2019-04-22 00:03:28" itemprop="dateCreated datePublished" datetime="2019-04-22T00:03:28+08:00">2019-04-22</time>
+              <time title="创建时间：2019-04-22 00:03:28 / 修改时间：20:52:19" itemprop="dateCreated datePublished" datetime="2019-04-22T00:03:28+08:00">2019-04-22</time>
             
 
+            
+              
+
+              
             
           </span>
 
@@ -424,7 +434,205 @@
       
 
       
-        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><h2 id="Hbase是什么"><a href="#Hbase是什么" class="headerlink" title="Hbase是什么"></a>Hbase是什么</h2><h2 id="Hbase的架构是什么"><a href="#Hbase的架构是什么" class="headerlink" title="Hbase的架构是什么"></a>Hbase的架构是什么</h2><h2 id="Hbase怎样工作的"><a href="#Hbase怎样工作的" class="headerlink" title="Hbase怎样工作的"></a>Hbase怎样工作的</h2><h2 id="Hbase有什么好处"><a href="#Hbase有什么好处" class="headerlink" title="Hbase有什么好处"></a>Hbase有什么好处</h2><h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1>
+        <blockquote>
+<p>摘要：HBase是一种 “NoSQL” 数据库. <code>NoSQL</code>是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。<a id="more"></a></p>
+</blockquote>
+<p>[TOC]</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><h2 id="Hbase是什么"><a href="#Hbase是什么" class="headerlink" title="Hbase是什么"></a>Hbase是什么</h2><p>​    HBase是一种构建与Hadoop架构之上的 <code>NoSQL</code> 数据库. <code>NoSQL</code>是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。有许多种 NoSQL 数据库: BerkeleyDB 是本地 NoSQL 数据库例子, 而 HBase 是大型分布式数据库。 技术上来说, HBase 更像是”数据存储(Data Store)” 多于 “数据库(Data Base)”。因为缺少很多RDBMS特性, 如列类型，第二索引，触发器，高级查询语言等.</p>
+<p>​    然而, HBase 有许多特征同时支持线性化和模块化扩充。 HBase 集群通过增加RegionServers进行扩充。 它可以放在普通的服务器中。例如，如果集群从10个扩充到20个RegionServer，存储空间和处理容量都同时翻倍。 RDBMS 也能很好扩充， 但仅对一个点 - 特别是对一个单独数据库服务器的大小 - 同时，为了更好的性能，需要特殊的硬件和存储设备。 HBase 特性：</p>
+<ul>
+<li>强一致性读写: HBase 不是 “最终一致性(eventually consistent)” 数据存储. 这让它很适合高速计数聚合类任务。</li>
+<li>自动分片(Automatic sharding): HBase 表通过region分布在集群中。数据增长时，region会自动分割并重新分布。</li>
+<li>RegionServer 自动故障转移</li>
+<li>Hadoop/HDFS 集成: HBase 支持本机外HDFS 作为它的分布式文件系统。</li>
+<li>MapReduce: HBase 通过MapReduce支持大并发处理， HBase 可以同时做源和目标.</li>
+<li>Java 客户端 API: HBase 支持易于使用的 Java API 进行编程访问.</li>
+<li>Thrift/REST API: HBase 也支持Thrift 和 REST 作为非Java 前端.</li>
+<li>Block Cache 和 Bloom Filters: 对于大容量查询优化， HBase支持 Block Cache 和 Bloom Filters。</li>
+<li>运维管理: HBase提供内置网页用于运维视角和JMX 度量.</li>
+</ul>
+<hr>
+<p>启动Hbase后，可以打开Web界面</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://ip_addr:16010</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/04/22/Hbase-漫漫之路/WebUi.png" alt="webui"></p>
+<h2 id="Hbase的架构是什么"><a href="#Hbase的架构是什么" class="headerlink" title="Hbase的架构是什么"></a>Hbase的架构是什么</h2><p><img src="https://pic1.zhimg.com/v2-a5af40208819e62d5c77003de3d50030_r.png" alt="架构图"></p>
+<p><strong>Client</strong></p>
+<ul>
+<li>包含访问Hbase的接口并且维护cache从而加快对Hbase的访问</li>
+</ul>
+<p><strong>Zookeeper</strong>[^6]</p>
+<ul>
+<li>保证任何时候，集群中只有一个 Master</li>
+<li>维护哪些服务器处于活动状态且可用，并实时通知 Master。</li>
+<li>Zookeeper 来保证共同的共享状态。</li>
+<li>存储 Hbase 的 Schema 和 Table 的元数据信息</li>
+</ul>
+<p><img src="/2019/04/22/Hbase-漫漫之路/HBaseArchitecture-Blog-Fig4.png" alt="hbase-zk"></p>
+<p><strong>Master</strong></p>
+<ul>
+<li>为 region server 分配 region</li>
+<li>负责 region server 的负载均衡</li>
+<li>发现失效的 region server 并且进行重新分配 region</li>
+<li>管理 用户对于 表的增删改操作</li>
+</ul>
+<p><strong>RegionServer</strong></p>
+<ul>
+<li>负责维护 region ， 处理 region 所产生的 IO 请求</li>
+<li>负责切分 在运行过程中 过大的 region</li>
+</ul>
+<p><strong>Hlog</strong></p>
+<ul>
+<li>HLog文件就是一个普通的Hadoop Sequence File，Sequence File 的Key是HLogKey对象，HLogKey中记录了写入数据的归属信息，除了table和 region名字外，同时还包括sequence number和timestamp，timestamp是” 写入时间”，sequence number的起始值为0，或者是最近一次存入文件系 统中sequence number。</li>
+<li>HLog SequeceFile的Value是HBase的KeyValue对象，即对应HFile中的 KeyValue</li>
+</ul>
+<h2 id="Hbase的存储过程"><a href="#Hbase的存储过程" class="headerlink" title="Hbase的存储过程"></a>Hbase的存储过程</h2><p>在Hbase的架构中，存在如下几个组件操作</p>
+<ol>
+<li>预写日志 ： WAL （write ahead log），所有的客户端进行写入操作的时候，会先将操作的日志写入到WAL中</li>
+<li>MeMStore ： 当缓存达到一行阈值的时候，会进行 <code>flush</code>操作，会将 MeMStore中数据， 一些到 磁盘中（HDFS），也叫做 存储文件【 Store File （HFile<a href="一个StoreFile对应着一个HFile。而HFile是存储在HDFS之上的。">^1</a>）】</li>
+<li>当溢写本地的 HFile 数量达到一行阈值的时候，会进行合并操作，合并成一个更大的 StoreFile ， 当StoreFile 大小达到一行阈值的时候，再次进行 split 操作，将 region 划分成两个</li>
+<li>HMaster 会把其中一个 Region 分发到其他的 RegionServer 上，从而实现 服务器的 负载均衡</li>
+</ol>
+<blockquote>
+<p>对于Hbase 的删除， 是在删除的时候给 所要删除的数据打上标签， 在合并中进行删除（也就是说 合并操作中，不包含那些打上标记的数据）</p>
+</blockquote>
+<h2 id="Hbase怎样工作的"><a href="#Hbase怎样工作的" class="headerlink" title="Hbase怎样工作的"></a>Hbase怎样工作的</h2><ul>
+<li>读数据流程</li>
+</ul>
+<p>Hbase中存在两张表[^3]</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@centos <span class="number">1588230740</span>]<span class="comment"># cd /opt/app/hbase/data/data/hbase/</span></span><br><span class="line">[root@centos hbase]<span class="comment"># ll</span></span><br><span class="line">total <span class="number">0</span></span><br><span class="line">drwxrwxr-x. <span class="number">5</span> dy dy <span class="number">54</span> Apr <span class="number">22</span> <span class="number">00</span>:<span class="number">04</span> meta         --记录的是所有表的 region 信息</span><br><span class="line">drwxrwxr-x. <span class="number">5</span> dy dy <span class="number">76</span> Apr <span class="number">22</span> <span class="number">15</span>:<span class="number">16</span> namespace    --存储的是系统中 namespace 的信息</span><br></pre></td></tr></table></figure>
+<ol>
+<li>客户端首先访问 Zookeeper ， 从 meta 表中读取 region 的位置， 之后读取 meta表中的数据， meta 中又存储了用户表 region 信息</li>
+<li><p>根据 namespace ，表名 和 rowkey 在 meta 表中找到对应的 region 信息</p>
+</li>
+<li><p>寻找到对应的这个 region </p>
+</li>
+<li>从 MeMStore 找数据， 如果不存在， 再到 StoreFile 上读取 （提高读取的效率）</li>
+</ol>
+<hr>
+<ul>
+<li>写数据流程</li>
+</ul>
+<ol>
+<li>Client 首先访问 Zookeeper ， 从 meta 表获取相对应的 region 信息 ， 之后找到 meta 表的数据</li>
+<li>namespace、表名、 rowkey 会 根据 meta 表的数据找到写入数据对应的 region 信息</li>
+<li>找到相对应的 regionServer</li>
+<li>将数据分别写到 HLog 和 MeMStore 一份</li>
+<li>MeMStore 达到一个阈值 后将数据 进行 刷新操作，合并成一个 StoreFile 文件[^4]</li>
+<li>当 StoreFile 达到一定的阈值之后，进行Compact合并操作，合并成一个StoreFIle[^5]</li>
+<li>当 合并后的 StoreFile 达到一定大小的时候，会将当前的 region 进行分割操作，并由HMaster 分散到其他的 RegionServer，实现负载均衡</li>
+</ol>
+<h2 id="Hbase有什么好处"><a href="#Hbase有什么好处" class="headerlink" title="Hbase有什么好处"></a>Hbase有什么好处</h2><ul>
+<li>HBase不适合所有问题.</li>
+</ul>
+<p>首先，确信有足够多数据，如果有上亿或上千亿行数据，HBase是很好的备选。 如果只有上千或上百万行，则用传统的RDBMS可能是更好的选择。因为所有数据可以在一两个节点保存，集群其他节点可能闲置。</p>
+<p>其次，确信可以不依赖所有RDBMS的额外特性 (e.g., 列数据类型, 第二索引, 事物,高级查询语言等.) 一个建立在RDBMS上应用，如不能仅通过改变一个JDBC驱动移植到HBase。相对于移植， 需考虑从RDBMS 到 HBase是一次完全的重新设计。</p>
+<p>第三， 确信你有足够硬件。甚至 HDFS 在小于5个数据节点时，干不好什么事情 (根据如 HDFS 块备份数为 3), 还要加上一个 NameNode.</p>
+<h2 id="HBase-和-Hadoop-HDFS-的区别"><a href="#HBase-和-Hadoop-HDFS-的区别" class="headerlink" title="HBase 和 Hadoop/HDFS 的区别?"></a>HBase 和 Hadoop/HDFS 的区别?</h2><p>​    <a href="http://hadoop.apache.org/hdfs/" target="_blank" rel="noopener">HDFS</a> 是分布式文件系统，适合保存大文件。官方宣称它并非普通用途文件系统，不提供文件的个别记录的快速查询。 另一方面，HBase基于HDFS且提供大表的记录快速查找(和更新)。这有时可能引起概念混乱。 HBase 内部将数据放到索引好的 “存储文件(StoreFiles)” ，以便高速查询。存储文件位于 HDFS中。参考<a href="http://abloz.com/hbase/book.html#datamodel" target="_blank" rel="noopener">Chapter 5, <em>数据模型</em></a> 和该章其他内容获取更多HBase如何归档的信息。</p>
+<h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><h2 id="DDL操作"><a href="#DDL操作" class="headerlink" title="DDL操作"></a>DDL操作</h2><ul>
+<li>查看 Help</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">hbase(main):<span class="number">001</span>:<span class="number">0</span>&gt; help</span><br><span class="line"></span><br><span class="line">COMMAND GROUPS:</span><br><span class="line">  Group name: general</span><br><span class="line">  Commands: status, table_help, version, whoami</span><br><span class="line"></span><br><span class="line">  Group name: ddl</span><br><span class="line">  Commands: alter, alter_async, alter_status, create, describe, disable, disable_all, drop, drop_all, enable, enable_all, exists, get_table, is_disabled, is_enabled, list, locate_region, show_filters</span><br><span class="line"></span><br><span class="line">  Group name: namespace</span><br><span class="line">  Commands: alter_namespace, create_namespace, describe_namespace, drop_namespace, list_namespace, list_namespace_tables</span><br><span class="line"></span><br><span class="line">  Group name: dml</span><br><span class="line">  Commands: append, count, delete, deleteall, get, get_counter, get_splits, incr, put, scan, truncate, truncate_preserve</span><br><span class="line"></span><br><span class="line">  Group name: tools</span><br><span class="line">  Commands: assign, balance_switch, balancer, balancer_enabled, catalogjanitor_enabled, catalogjanitor_run, catalogjanitor_switch, close_region, compact, compact_rs, flush, major_compact, merge_region, move, normalize, normalizer_enabled, normalizer_switch, split, splitormerge_enabled, splitormerge_switch, trace, unassign, wal_roll, zk_dump</span><br><span class="line"></span><br><span class="line">  Group name: replication</span><br><span class="line">  Commands: add_peer, append_peer_tableCFs, disable_peer, disable_table_replication, enable_peer, enable_table_replication, get_peer_config, list_peer_configs, list_peers, list_replicated_tables, remove_peer, remove_peer_tableCFs, set_peer_tableCFs, show_peer_tableCFs</span><br><span class="line"></span><br><span class="line">  Group name: snapshots</span><br><span class="line">  Commands: clone_snapshot, delete_all_snapshot, delete_snapshot, delete_table_snapshots, list_snapshots, list_table_snapshots, restore_snapshot, snapshot</span><br><span class="line"></span><br><span class="line">  Group name: configuration</span><br><span class="line">  Commands: update_all_config, update_config</span><br><span class="line"></span><br><span class="line">  Group name: quotas</span><br><span class="line">  Commands: list_quotas, set_quota</span><br><span class="line"></span><br><span class="line">  Group name: security</span><br><span class="line">  Commands: grant, list_security_capabilities, revoke, user_permission</span><br><span class="line"></span><br><span class="line">  Group name: procedures</span><br><span class="line">  Commands: abort_procedure, list_procedures</span><br><span class="line"></span><br><span class="line">  Group name: visibility labels</span><br><span class="line">  Commands: add_labels, clear_auths, get_auths, list_labels, set_auths, set_visibility</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看命名空间</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hbase(main):<span class="number">001</span>:<span class="number">0</span>&gt; list_namespace</span><br><span class="line">==========================================================================</span><br><span class="line">NAMESPACE                                                                                 </span><br><span class="line">default                                                                                   </span><br><span class="line">hbase                                                                                     </span><br><span class="line"><span class="number">2</span> row(s) <span class="keyword">in</span> <span class="number">0.3090</span> seconds</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看命名空间下的表</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hbase(main):<span class="number">005</span>:<span class="number">0</span>&gt; list_namespace_tables <span class="string">'hbase'</span></span><br><span class="line">==========================================================================</span><br><span class="line">TABLE                                                                                     </span><br><span class="line">meta                                                                                      </span><br><span class="line">namespace                                                                                 </span><br><span class="line"><span class="number">2</span> row(s) <span class="keyword">in</span> <span class="number">0.0220</span> seconds</span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建命名空间</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hbase(main):<span class="number">007</span>:<span class="number">0</span>&gt; create_namespace <span class="string">'test'</span></span><br><span class="line">-- 在创建表的时候，可以指定命名空间，如果没有指定，则默认在 `default` 命名空间下面保存</span><br><span class="line">==========================================================================</span><br><span class="line"><span class="number">0</span> row(s) <span class="keyword">in</span> <span class="number">0.8760</span> seconds</span><br></pre></td></tr></table></figure>
+<ul>
+<li>删除命名空间</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hbase(main):<span class="number">010</span>:<span class="number">0</span>&gt; drop_namespace <span class="string">'test'</span></span><br><span class="line">==========================================================================</span><br><span class="line"><span class="number">0</span> row(s) <span class="keyword">in</span> <span class="number">0.8740</span> seconds</span><br></pre></td></tr></table></figure>
+<ul>
+<li>对于表的操作 <em>表名，行和列需要添加引号</em></li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create <span class="string">'test'</span>,<span class="string">'cf'</span></span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>表名（example）</th>
+<th>列簇（example）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test</td>
+<td>cf</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>查看表描述</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">desc <span class="string">'t1'</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>删除表<a href="当开启一个大的合并，才会将打标记的数据删除，这个大合并消耗比较大的性能，只有在晚上或者资源使用少时才使用。">^2</a>（<u>对于表的删除，首先需要禁用之后才可以删除</u>）</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">disable <span class="string">'t1'</span></span><br><span class="line">drop <span class="string">'t1'</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2019/04/22/Hbase-漫漫之路/删除原理.png" alt="删除"></p>
+<p><img src="/2019/04/22/Hbase-漫漫之路/删除表.png" alt="删除表"></p>
+<h2 id="DML操作"><a href="#DML操作" class="headerlink" title="DML操作"></a>DML操作</h2><ul>
+<li>插入数据</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">hbase(main):<span class="number">006</span>:<span class="number">0</span>&gt; put <span class="string">'test'</span>,<span class="string">'row1'</span>,<span class="string">'cf:a'</span>,<span class="string">'value1'</span></span><br><span class="line"><span class="number">0</span> row(s) <span class="keyword">in</span> <span class="number">0.3120</span> seconds</span><br><span class="line"></span><br><span class="line">hbase(main):<span class="number">007</span>:<span class="number">0</span>&gt; put <span class="string">'test'</span>,<span class="string">'row2'</span>,<span class="string">'cf:b'</span>,<span class="string">'value2'</span></span><br><span class="line"><span class="number">0</span> row(s) <span class="keyword">in</span> <span class="number">0.0100</span> seconds</span><br><span class="line"></span><br><span class="line">hbase(main):<span class="number">008</span>:<span class="number">0</span>&gt; put <span class="string">'test'</span>,<span class="string">'row3'</span>,<span class="string">'cf:c'</span>,<span class="string">'value3'</span></span><br><span class="line"><span class="number">0</span> row(s) <span class="keyword">in</span> <span class="number">0.0070</span> seconds</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th>表名</th>
+<th>RowKey</th>
+<th>列族+列名 ( 列族+列 )</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>test</td>
+<td>row1</td>
+<td>cf：a</td>
+<td>value1</td>
+</tr>
+<tr>
+<td>test</td>
+<td>row2</td>
+<td>cf：b</td>
+<td>value2</td>
+</tr>
+<tr>
+<td>test</td>
+<td>row3</td>
+<td>cf：c</td>
+<td>value3</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>查询数据</p>
+<ul>
+<li>根据 <code>rowkey</code> 查询</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hbase(main):<span class="number">040</span>:<span class="number">0</span>&gt; get <span class="string">'test'</span>,<span class="string">'row1'</span></span><br><span class="line">==========================================================================</span><br><span class="line">COLUMN                  CELL                                                              </span><br><span class="line"> cf:a                   timestamp=<span class="number">1555918023570</span>, value=value1                             </span><br><span class="line"><span class="number">1</span> row(s) <span class="keyword">in</span> <span class="number">0.1500</span> seconds</span><br></pre></td></tr></table></figure>
+<ul>
+<li>指定某个列族进行查询</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hbase(main):<span class="number">053</span>:<span class="number">0</span>&gt; get <span class="string">'test'</span>,<span class="string">'row1'</span>,<span class="string">'cf:a'</span></span><br><span class="line">==========================================================================</span><br><span class="line">COLUMN                  CELL                                                              </span><br><span class="line"> cf:a                   timestamp=<span class="number">1555918023570</span>, value=value1                             </span><br><span class="line"><span class="number">1</span> row(s) <span class="keyword">in</span> <span class="number">0.0120</span> seconds</span><br></pre></td></tr></table></figure>
+<ul>
+<li>按照指定的列簇+列进行查询</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hbase(main):<span class="number">055</span>:<span class="number">0</span>&gt; scan <span class="string">'test'</span>,&#123;COLUMNS =&gt; <span class="string">'cf:a'</span>&#125;</span><br><span class="line">==========================================================================</span><br><span class="line">ROW                     COLUMN+CELL                                                       </span><br><span class="line"> row1                   column=cf:a, timestamp=<span class="number">1555918023570</span>, value=value1                </span><br><span class="line"><span class="number">1</span> row(s) <span class="keyword">in</span> <span class="number">0.0850</span> seconds</span><br></pre></td></tr></table></figure>
+<ul>
+<li>全表扫描 ( <strong>类似于mysql中的  SELECT *  , 切勿轻易使用</strong>  )</li>
+</ul>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hbase(main):<span class="number">050</span>:<span class="number">0</span>&gt; scan <span class="string">'test'</span></span><br><span class="line">==========================================================================</span><br><span class="line">ROW                     COLUMN+CELL                                                       </span><br><span class="line"> row1                   column=cf:a, timestamp=<span class="number">1555918023570</span>, value=value1                </span><br><span class="line"> row2                   column=cf:b, timestamp=<span class="number">1555918038859</span>, value=value2                </span><br><span class="line"> row3                   column=cf:c, timestamp=<span class="number">1555918050016</span>, value=value3                </span><br><span class="line"><span class="number">3</span> row(s) <span class="keyword">in</span> <span class="number">0.0280</span> seconds</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<hr>
+<p>[^3]: 目前使用的是单机版的，文件的存储保存在了本地中，在Hdfs 上存在有于本地一致的文件夹，<em>没搞清楚</em><br>[^4]: 如果<code>flush</code>操作的时候 ，数据丢失，可以从 HLog 上进行恢复<br>[^5]: 这里会进行 版本的合并，且将已经标记为删除的数据进行删除<br>[^6]: 如图, zookeeper有三台服务器, region server和master节点都通过heartbeat的方式向zookeeper报告状态</p>
+
       
     </div>
 
@@ -469,6 +677,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/22/Hive-拉链操作/" rel="prev" title="Hive-拉链操作">
+                Hive-拉链操作 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -537,7 +749,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-count">10</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -634,7 +846,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase是什么"><span class="nav-number">1.1.</span> <span class="nav-text">Hbase是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase的架构是什么"><span class="nav-number">1.2.</span> <span class="nav-text">Hbase的架构是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase怎样工作的"><span class="nav-number">1.3.</span> <span class="nav-text">Hbase怎样工作的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase有什么好处"><span class="nav-number">1.4.</span> <span class="nav-text">Hbase有什么好处</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实践"><span class="nav-number">2.</span> <span class="nav-text">实践</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase是什么"><span class="nav-number">1.1.</span> <span class="nav-text">Hbase是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase的架构是什么"><span class="nav-number">1.2.</span> <span class="nav-text">Hbase的架构是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase的存储过程"><span class="nav-number">1.3.</span> <span class="nav-text">Hbase的存储过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase怎样工作的"><span class="nav-number">1.4.</span> <span class="nav-text">Hbase怎样工作的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hbase有什么好处"><span class="nav-number">1.5.</span> <span class="nav-text">Hbase有什么好处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase-和-Hadoop-HDFS-的区别"><span class="nav-number">1.6.</span> <span class="nav-text">HBase 和 Hadoop/HDFS 的区别?</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实践"><span class="nav-number">2.</span> <span class="nav-text">实践</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DDL操作"><span class="nav-number">2.1.</span> <span class="nav-text">DDL操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DML操作"><span class="nav-number">2.2.</span> <span class="nav-text">DML操作</span></a></li></ol></li></ol></div>
             
 
           </div>
