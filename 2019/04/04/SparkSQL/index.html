@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#B0E0E6">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/Head.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/Head.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo.svg?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#B0E0E6">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="SparkSQL​    Spark SQL是用于结构化数据处理的 Spark 模块 , 与基本的 Spark RDD 不同 ，">
+<meta name="keywords" content="Spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SparkSQL--漫漫之路">
+<meta property="og:url" content="http://yimting.github.io/2019/04/04/SparkSQL/index.html">
+<meta property="og:site_name" content="Baki&#39;Blog">
+<meta property="og:description" content="SparkSQL​    Spark SQL是用于结构化数据处理的 Spark 模块 , 与基本的 Spark RDD 不同 ，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6796519-9597ad0399fce37e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/193/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6796519-9c65906b1fa6c46f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/371/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6796519-9597ad0399fce37e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/193/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6796519-d7450fa04b50a7f7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/184/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6796519-07884947dc9abedb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/407/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6796519-3a2bacd5eef5bd1a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/466/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6796519-3b060df388dff78a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/570/format/webp">
+<meta property="og:image" content="http://i2.bvimg.com/11835/e8754f70fea4eb1e.png">
+<meta property="og:image" content="http://i2.bvimg.com/11835/91c1d4266c0c46ec.png">
+<meta property="og:image" content="http://i1.bvimg.com/11835/1537f42aec52e950.png">
+<meta property="og:image" content="http://i4.bvimg.com/11835/111ab45fe33a627a.png">
+<meta property="og:image" content="http://i4.bvimg.com/11835/5d45ee708ef95c19.png">
+<meta property="og:updated_time" content="2019-04-20T14:07:32.768Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SparkSQL--漫漫之路">
+<meta name="twitter:description" content="SparkSQL​    Spark SQL是用于结构化数据处理的 Spark 模块 , 与基本的 Spark RDD 不同 ，">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6796519-9597ad0399fce37e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/193/format/webp">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yimting.github.io/2019/04/04/SparkSQL/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>SparkSQL--漫漫之路 | Baki'Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Baki'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">yimting@aliyun.com</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yimting.github.io/2019/04/04/SparkSQL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yimting@aliyun.com">
+      <meta itemprop="description" content="路漫漫其修远兮">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Baki'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SparkSQL--漫漫之路
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-04 23:10:58" itemprop="dateCreated datePublished" datetime="2019-04-04T23:10:58+08:00">2019-04-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-04-20 22:07:32" itemprop="dateModified" datetime="2019-04-20T22:07:32+08:00">2019-04-20</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Learn/" itemprop="url" rel="index"><span itemprop="name">Learn</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="SparkSQL"><a href="#SparkSQL" class="headerlink" title="SparkSQL"></a>SparkSQL</h1><p>​    Spark SQL是用于结构化数据处理的 Spark 模块 , 与基本的 Spark RDD 不同 ，<a id="more"></a>SparkSQL 提供的接口为Spark提供了有关数据结构和正在执行计算的更多信息， 在内部有几种与Spark SQL 交互的方法， 包括<code>SQL</code> <code>DataFrame</code> <code>DataSets</code>，这意味着开发人员可以轻松的在各种 API 之间进行切换</p>
+<h3 id="SparkSQL-1"><a href="#SparkSQL-1" class="headerlink" title="SparkSQL"></a>SparkSQL</h3><p>​    SparkSQL 可以执行 SQL语法 与 HQL 编写的 SQL 查询语句， SparkSQL 还可以用于现有的 Hive 安装中，读取数据。如果想查看请参阅<a href="http://spark.apache.org/docs/1.6.0/sql-programming-guide.html#hive-tables" target="_blank" rel="noopener">Hive Tables</a>部分，返回结果为<a href="http://spark.apache.org/docs/1.6.0/sql-programming-guide.html#DataFrames" target="_blank" rel="noopener">DataFrame</a> ，还可以使用 <a href="http://spark.apache.org/docs/1.6.0/sql-programming-guide.html#running-the-thrift-jdbcodbc-server" target="_blank" rel="noopener">JDBC / ODBC</a>与SQL接口进行交互。</p>
+<h3 id="DataFrames"><a href="#DataFrames" class="headerlink" title="DataFrames"></a>DataFrames</h3><p>​    分布式数据集合， 在概念上等同于 关系型数据库中的表 或者  R / python 中的数据框 , 但是底层更加的丰富 ， 可以存在多种数据来源， 例如： 结构化的我呢见， Hive 中的表， 外部数据库 或者 现有RDD</p>
+<p>​    DataFrame在RDD的基础上加了Schema（描述数据的信息，可以认为是元数据，DataFrame曾经就有个名字叫SchemaRDD）</p>
+<p>​    假设RDD中的两行数据长这样</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6796519-9597ad0399fce37e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/193/format/webp" alt="RDD数据"></p>
+<p>​    那么DataFrame中的数据长这样</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6796519-9c65906b1fa6c46f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/371/format/webp" alt="DataFrame"></p>
+<p>​    从上面两张图可以看出来， DF 比 RDD 多了一些字段的描述信息 ， 变成了一张表， Df 再此还配置了相对应的操作  <a href="http://spark.apache.org/docs/1.6.0/api/scala/index.html#org.apache.spark.sql.DataFrame" target="_blank" rel="noopener">DataFrameAPI </a> <a href="http://spark.apache.org/docs/1.6.0/api/scala/index.html#org.apache.spark.sql.functions$" target="_blank" rel="noopener">DataFrameAPI的函数</a></p>
+<blockquote>
+<p>注意 ： DataFrame 是用来处理结构化数据的</p>
+</blockquote>
+<h3 id="DataSets"><a href="#DataSets" class="headerlink" title="DataSets"></a><a href="http://spark.apache.org/docs/1.6.0/api/scala/index.html#org.apache.spark.sql.Dataset" target="_blank" rel="noopener">DataSets</a></h3><p>​    是DF的扩展 , 是一个强类型的数据语言，提供了更加安全，面向对象的编程接口，与DF一样，DS通过将表达式和数据字段暴漏给</p>
+<p>查询规约器，来利用Spark的Catalyst优化器。</p>
+<p>​    我们将他设计与现在的RDD 一起工作， 到那时当数据作为结构化形式表示时，可以提高效率。</p>
+<p>DataSets 是一中强类型， 不可变的对象集合，</p>
+<p>​    假设RDD中的两行数据长这样</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6796519-9597ad0399fce37e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/193/format/webp" alt="RDD数据"></p>
+<p>​    DataSet中的样子</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6796519-d7450fa04b50a7f7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/184/format/webp" alt="DataSetData"></p>
+<p>​    或者这样（每行数据是个Object）</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6796519-07884947dc9abedb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/407/format/webp" alt="img"></p>
+<p>​    相比DataFrame，Dataset提供了编译时类型检查，对于分布式程序来讲，提交一次作业太费劲了（要编译、打包、上传、运行），到提交到集群运行时才发现错误，实在是想骂人，这也是引入Dataset的一个重要原因。</p>
+<p>​    使用DataFrame的代码中json文件中并没有score字段，但是能编译通过，但是运行时会报异常！如下图代码所示</p>
+<p><img src="https:////upload-images.jianshu.io/upload_images/6796519-3a2bacd5eef5bd1a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/466/format/webp" alt="img"></p>
+<p>​    而使用Dataset实现，会在IDE中就报错，出错提前到了编译之前</p>
+<p><img src="https:////upload-images.jianshu.io/upload_images/6796519-3b060df388dff78a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/570/format/webp" alt="img"></p>
+<p>​    RDD转换DataFrame后不可逆，但RDD转换Dataset是可逆的（这也是Dataset产生的原因）。</p>
+<hr>
+<h3 id="RDD、DataFrame、DataSet-之间的区别"><a href="#RDD、DataFrame、DataSet-之间的区别" class="headerlink" title="RDD、DataFrame、DataSet 之间的区别"></a>RDD、DataFrame、DataSet 之间的区别</h3><h4 id="三者的关系"><a href="#三者的关系" class="headerlink" title="三者的关系"></a>三者的关系</h4><p><img src="http://i2.bvimg.com/11835/e8754f70fea4eb1e.png" alt="三者的关系"></p>
+<p>借助API的关系， 三者之间可以互相进行切换， 而且 DF，  DS 是建立在RDD的基础之上</p>
+<h4 id="共性："><a href="#共性：" class="headerlink" title="共性："></a>共性：</h4><blockquote>
+<p>它们其中都不存在真正的数据</p>
+<p>底层的方法有两类，transformation 和 action ，同样transformation 操作 ，是一个 lazy 操作</p>
+<p>所有的action算子，都会触发 tranformation 的运行，得到最后的结果， 这也是他们的共同点</p>
+</blockquote>
+<p>1、RDD、DataFrame、Dataset全都是spark平台下的分布式弹性数据集，为处理超大型数据提供便利</p>
+<p>2、三种方式都有惰性机制，在进行创建、转换，如map方法时，不会立即执行，只有在遇到Action时 ， 如foreach时，三者才会开始运算，极端情况下，如果代码里面有创建、转换，但是后面没有在Action中使用对应的结果，在执行时代码会被直接跳过，</p>
+<p>3、三者都会根据 Spark 的内存状态进行自动的缓存运算， 这样子 即使数据量很大， 也不用担心内存溢出</p>
+<p>4、 三个都有Partition 的概念 例如：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setAppName(<span class="string">" RDD_DF_DS ! "</span>).setMaster(<span class="string">"local[*]"</span>)</span><br><span class="line"><span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line"><span class="keyword">val</span> data = sc.parallelize(<span class="type">Seq</span>(<span class="number">12</span>,<span class="number">623</span>, <span class="number">1</span>, <span class="number">33</span>, <span class="number">4</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment">//进行重新分区， 之后对分区进行map操作 ， 每个map中 对每个元素进行操作</span></span><br><span class="line"><span class="keyword">val</span> rdd = data.repartition(<span class="number">3</span>).mapPartitions(lines =&gt; &#123;</span><br><span class="line">    lines.map &#123; line =&gt; &#123;</span><br><span class="line">        print(<span class="string">"转换操作！！"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;).collect()</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<p><img src="http://i2.bvimg.com/11835/91c1d4266c0c46ec.png" alt="以上代码运行结果"></p>
+<p>5、三种方式存在着许多相同的函数操作</p>
+<p>6、在对于DF和DS操作的时候通常添加该类的隐式转换</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">....</span><br><span class="line"><span class="keyword">val</span> sparkSession = <span class="type">SparkSession</span>.builder().config(sparkconf).getOrCreate()</span><br><span class="line">....</span><br><span class="line"><span class="keyword">import</span> sparkSession.implicits._</span><br><span class="line">....</span><br></pre></td></tr></table></figure>
+<p>7、DataFrame和Dataset均可使用模式匹配获取各个字段的值和类型 （ <em>不太明白</em> ）</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">....</span><br><span class="line"><span class="comment">//为了提高稳健性，最好后面有一个_通配操作，这里提供了DataFrame一个解析字段的方法</span></span><br><span class="line"><span class="keyword">val</span> rdd = data.map&#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="type">Row</span>(co1:<span class="type">String</span>,co2:<span class="type">Int</span>)=&gt;&#123;</span><br><span class="line">        print(co1);print(co2)</span><br><span class="line">        co1</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> _ =&gt; print(<span class="string">"hello"</span>)</span><br><span class="line">&#125;.collect()</span><br></pre></td></tr></table></figure>
+<p><img src="http://i1.bvimg.com/11835/1537f42aec52e950.png" alt="结果1"></p>
+<p>Dataset:</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Coltest</span>(<span class="params">col1:<span class="type">String</span>,col2:<span class="type">Int</span></span>)<span class="keyword">extends</span> <span class="title">Serializable</span> <span class="title">//定义字段名和类型</span></span></span><br><span class="line"><span class="class">    <span class="title">testDS</span>.<span class="title">map</span></span>&#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">Coltest</span>(col1:<span class="type">String</span>,col2:<span class="type">Int</span>)=&gt;</span><br><span class="line">        println(col1);println(col2)</span><br><span class="line">        col1</span><br><span class="line">      <span class="keyword">case</span> _=&gt;</span><br><span class="line">        <span class="string">""</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="区别"><a href="#区别" class="headerlink" title="区别 :"></a>区别 :</h4><ul>
+<li>RDD:</li>
+</ul>
+<p>1、RDD一般和spark mlib同时使用 ，是使用sparkCore下面的算子对数据集进行的处理</p>
+<p>2、RDD不支持sparksql操作</p>
+<ul>
+<li>DataFrame:</li>
+</ul>
+<blockquote>
+<p>使用spark下面的模块， 对其进行处理 ， 其中又存在两种方式 ： <code>SQL</code> <code>API</code></p>
+<p>DF，DS 可以使用 SQL 编程 ，然而 RDD 不行</p>
+<p>DF 和 DS 有什么区别：</p>
+<ol>
+<li>DF是DS的特例 ， DS可以是任意类型，DF只能是Row类型，每行的数据类型是Row类型的</li>
+<li>DS 强类型的， DF antype  只有一种Row类型的</li>
+<li>定义在DS 的API ， DF都能用</li>
+</ol>
+</blockquote>
+<p>1、与RDD和Dataset不同，DataFrame每一行的类型固定为Row，只有通过解析才能获取各个字段的值，如</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> sparkSession = <span class="type">SparkSession</span>.builder().appName(<span class="string">"DF"</span>).master(<span class="string">"local[*]"</span>).getOrCreate()</span><br><span class="line"><span class="keyword">val</span> fileRDD = sparkSession.sparkContext.textFile(<span class="string">"c://input//student"</span>)</span><br><span class="line"><span class="keyword">val</span> stuInfo = fileRDD.map(lines=&gt;&#123;</span><br><span class="line">    <span class="keyword">val</span> fields = lines.split(<span class="string">" "</span>)</span><br><span class="line">    <span class="keyword">val</span> id = fields(<span class="number">0</span>).toInt</span><br><span class="line">    <span class="keyword">val</span> name = fields(<span class="number">1</span>)</span><br><span class="line">    <span class="type">Row</span>(id,name)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义结构化信息, 可以通过 StructType , 也可以通过样例类</span></span><br><span class="line"><span class="comment">//StructType 中保存的是,多个列信息,</span></span><br><span class="line"><span class="keyword">val</span> schema = <span class="type">StructType</span>(<span class="type">List</span>(</span><br><span class="line">    <span class="type">StructField</span>(<span class="string">"id"</span>,<span class="type">IntegerType</span>,<span class="literal">true</span>),</span><br><span class="line">    <span class="type">StructField</span>(<span class="string">"name"</span>,<span class="type">StringType</span>,<span class="literal">true</span>)</span><br><span class="line">))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> df = sparkSession.createDataFrame(stuInfo,schema)</span><br><span class="line">testDF.foreach&#123;</span><br><span class="line">  line =&gt;</span><br><span class="line">    <span class="keyword">val</span> col1=line.getAs[<span class="type">String</span>](<span class="string">"col1"</span>)</span><br><span class="line">    <span class="keyword">val</span> col2=line.getAs[<span class="type">String</span>](<span class="string">"col2"</span>)</span><br><span class="line">    print(col1 +<span class="string">"\t"</span>)</span><br><span class="line">    println(col2)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://i4.bvimg.com/11835/111ab45fe33a627a.png" alt="结果"></p>
+<p>2、DF与DS 都支持 SparkSQL 进行操作， 比如 select 、 groupBy 、OrderBy 之类， 还可以注册临时表/视图 ， 进行SQL 语句操作</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">....</span><br><span class="line">df.createOrReplaceTempView(<span class="string">"v_Stu"</span>)</span><br><span class="line"><span class="keyword">val</span> res = sparkSession.sql(<span class="string">"select * from v_Stu"</span>)</span><br><span class="line">res.show()</span><br><span class="line">sparkSession.stop()</span><br></pre></td></tr></table></figure>
+<p>3、DataFrame与Dataset支持一些特别方便的保存方式，比如保存成csv，可以带上表头，这样每一列的字段名一目了然</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//保存</span></span><br><span class="line"><span class="keyword">val</span> saveoptions = </span><br><span class="line"><span class="type">Map</span>(<span class="string">"header"</span> -&gt; <span class="string">"true"</span>, <span class="string">"delimiter"</span> -&gt; <span class="string">"\t"</span>, <span class="string">"path"</span> -&gt;<span class="string">"hdfs://xxx.xxx.xxx.xxx:9000/test"</span>)</span><br><span class="line"></span><br><span class="line">datawDF.write.format(<span class="string">"com.databricks.spark.csv"</span>).mode(<span class="type">SaveMode</span>.<span class="type">Overwrite</span>).options(saveoptions).save()</span><br><span class="line"><span class="comment">//读取</span></span><br><span class="line"><span class="keyword">val</span> options = </span><br><span class="line"><span class="type">Map</span>(<span class="string">"header"</span> -&gt; <span class="string">"true"</span>, <span class="string">"delimiter"</span> -&gt; <span class="string">"\t"</span>, <span class="string">"path"</span> -&gt; <span class="string">"hdfs://172.xx.xx.xx:9000/test"</span>)</span><br><span class="line"><span class="keyword">val</span> datarDF= spark.read.options(options).format(<span class="string">"com.databricks.spark.csv"</span>).load()</span><br></pre></td></tr></table></figure>
+<p>使用这种的保存方式， 方便的获取字段名称与列进行对应，而且==分隔符【delimiter】== 可以通过用户自定义</p>
+<ul>
+<li><p>DataSet：</p>
+<p>主要对比Dataset和DataFrame，因为Dataset和DataFrame拥有完全相同的成员函数，区别只是每一行的数据    类型不同</p>
+<p>Df 也可以叫做   DataSet [Row]   , 因为 DS 和 DF 拥有完全相同的成员函数， 区别只是每行数据类型不同而已</p>
+</li>
+</ul>
+<p>而Ds中， 每行数据是什么类型不一定，在进行自定义的 case class 之后可以进行获取每行信息</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> sparkSession = <span class="type">SparkSession</span>.builder()</span><br><span class="line">.appName(<span class="string">"RDD_DF_DS !"</span>)</span><br><span class="line">.master(<span class="string">"local[*]"</span>)</span><br><span class="line">.getOrCreate()</span><br><span class="line"><span class="comment">//数据来源可更换多种</span></span><br><span class="line"><span class="keyword">val</span> data = sparkSession.sparkContext.parallelize(<span class="type">List</span>((<span class="string">"a"</span>, <span class="number">1</span>), (<span class="string">"b"</span>, <span class="number">1</span>), (<span class="string">"a"</span>, <span class="number">1</span>)))</span><br><span class="line"><span class="keyword">val</span> test = data.map(line =&gt;&#123;</span><br><span class="line">    <span class="comment">//在上面的生成数据时用的是元组的形式 ， 传进去的方式也是通过元组的形式</span></span><br><span class="line">    <span class="keyword">val</span> col1 = line._1</span><br><span class="line">    <span class="keyword">val</span> col2 = line._2</span><br><span class="line">    info(col1,col2)</span><br><span class="line">&#125;)</span><br><span class="line">    <span class="comment">//通过隐式转换 将RDD对象转换成DS 对象 ， 之后进行处理</span></span><br><span class="line"><span class="keyword">import</span> sparkSession.implicits._</span><br><span class="line">	<span class="keyword">val</span> ds = test.toDS()</span><br><span class="line">	ds.createOrReplaceTempView(<span class="string">"info"</span>)</span><br><span class="line">	<span class="keyword">val</span> res = sparkSession.sql(<span class="string">"select * from info"</span>)</span><br><span class="line">	res.show()</span><br><span class="line">	sparkSession.stop()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">info</span> (<span class="params">col1:<span class="type">String</span> ,col2:<span class="type">Int</span></span>)</span></span><br><span class="line"><span class="class"><span class="title">//在原博文中，作者继承了</span> <span class="title">Serializable</span> <span class="title">，在样例类中，程序自动继承了</span> <span class="title">Serializable</span> <span class="title">，</span> <span class="title">也可以不写</span></span></span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<p><img src="http://i4.bvimg.com/11835/5d45ee708ef95c19.png" alt="结果"></p>
+<p>​     Dataset在需要访问列中的某个字段时是非常方便的，然而，如果要写一些适配性很强的函数时，</p>
+<p>​    如果使用Dataset，行的类型又不确定，可能是各种case class，无法实现适配，这时候用DataFrame即Dataset[Row]就能比较好的解决问题</p>
+<blockquote>
+<p>来源 horseman 博客：<a href="https://www.cnblogs.com/starwater/p/6841807.html" target="_blank" rel="noopener">https://www.cnblogs.com/starwater/p/6841807.html</a>   其中代码为自己更改</p>
+</blockquote>
+<p>​    DataSet数据集是一种强类型的对象集合（在编译阶段会检查代码是否正确），可以进行函数或者关系运算来进行并行转换 ，</p>
+<p>​    所有的Transformation的操作，都会产生一个新的数据集， 同样是Lazy操作，Action会触发之前所有的Tranformation操作 ， 当action触发的时候 ，运行由逻辑计划  优化为物理计划去执行 , (提高并行度 ， 尽量使用分布式 )  , 可以通过<code>explain</code> 来查看物理计划是怎么执行的 </p>
+<p>​    可以使用DSL 语言来实现，通过底层的API来实现</p>
+<p>数据集是强类型的对象集合，可以使用函数或关系运算并行转换。</p>
+<p>数据集在以下方面与RDD不同：在内部，数据集由Catalyst逻辑计划表示，数据以编码形式存储。</p>
+<p>该表示允许额外的逻辑操作，并且能够执行许多操作（排序，改组等）而无需反序列化到对象。</p>
+<p>创建数据集需要存在一个显式编码器，可用于将对象序列化为二进制格式。</p>
+<p>编码器还能够将给定对象的模式映射到Spark SQL类型系统。</p>
+<p>相比之下，RDD依赖于基于运行时反射的序列化。</p>
+<p>更改存储在数据集中的对象类型的操作也需要新类型的编码器。</p>
+<p>可以将数据集视为专用DataFrame，其中元素映射到特定JVM对象类型，而不是通用Row容器。</p>
+<p>可以通过调用df.as [ElementType]将DataFrame转换为特定的数据集。</p>
+<p>类似地，您可以通过调用ds.toDF（）将强类型数据集转换为通用DataFrame。</p>
+<p>兼容性注意：长期我们计划使DataFrame扩展数据集[Row]。但是，对类层次结构进行此更改会破坏现有功能操作（map，flatMap等）的函数签名。因此，此类应被视为最终API的预览。 Spark 1.6之后将对界面进行更改。</p>
+<h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><h3 id="DataFrame操作"><a href="#DataFrame操作" class="headerlink" title="DataFrame操作"></a>DataFrame操作</h3><h4 id="SQL的方式"><a href="#SQL的方式" class="headerlink" title="SQL的方式"></a>SQL的方式</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> sparkSession = <span class="type">SparkSession</span>.builder().appName(<span class="string">"DF"</span>).master(<span class="string">"local[*]"</span>).getOrCreate()</span><br><span class="line"><span class="keyword">val</span> fileRDD = sparkSession.sparkContext.textFile(args(<span class="number">0</span>))</span><br><span class="line"><span class="keyword">val</span> stuInfo = fileRDD.map(lines=&gt;&#123;</span><br><span class="line">    <span class="keyword">val</span> fields = lines.split(<span class="string">" "</span>)</span><br><span class="line">    <span class="keyword">val</span> id = fields(<span class="number">0</span>).toInt</span><br><span class="line">    <span class="keyword">val</span> name = fields(<span class="number">1</span>)</span><br><span class="line">    <span class="type">Row</span>(id,name)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//定义结构化信息, 可以通过 StructType , 也可以通过样例类</span></span><br><span class="line"><span class="comment">//StructType 中保存的是,多个列信息, </span></span><br><span class="line"><span class="keyword">val</span> schema = <span class="type">StructType</span>(<span class="type">List</span>(</span><br><span class="line">    <span class="type">StructField</span>(<span class="string">"id"</span>,<span class="type">IntegerType</span>,<span class="literal">true</span>),</span><br><span class="line">    <span class="type">StructField</span>(<span class="string">"name"</span>,<span class="type">StringType</span>,<span class="literal">true</span>)</span><br><span class="line">))</span><br><span class="line"><span class="keyword">val</span> df = sparkSession.createDataFrame(stuInfo,schema)</span><br><span class="line">df.createOrReplaceTempView(<span class="string">"stu"</span>)</span><br><span class="line"><span class="keyword">val</span> res = sparkSession.sql(<span class="string">"select id,name from stu where id &gt; 2"</span>)</span><br><span class="line">res.show()</span><br><span class="line">sparkSession.stop()</span><br></pre></td></tr></table></figure>
+<h4 id="编程的方式"><a href="#编程的方式" class="headerlink" title="编程的方式"></a>编程的方式</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> sparkSession = <span class="type">SparkSession</span>.builder().appName(<span class="string">"DF"</span>).master(<span class="string">"local[*]"</span>).getOrCreate()</span><br><span class="line"><span class="keyword">val</span> fileRDD = sparkSession.sparkContext.textFile(<span class="string">"c://input//student"</span>)</span><br><span class="line"><span class="keyword">val</span> stuInfo = fileRDD.map(lines=&gt;&#123;</span><br><span class="line">    <span class="keyword">val</span> fields = lines.split(<span class="string">" "</span>)</span><br><span class="line">    <span class="keyword">val</span> id = fields(<span class="number">0</span>).toInt</span><br><span class="line">    <span class="keyword">val</span> name = fields(<span class="number">1</span>)</span><br><span class="line">    <span class="type">Row</span>(id,name)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//定义结构化信息, 可以通过 StructType , 也可以通过样例类</span></span><br><span class="line"><span class="comment">//StructType 中保存的是,多个列信息,</span></span><br><span class="line"><span class="keyword">val</span> schema = <span class="type">StructType</span>(<span class="type">List</span>(</span><br><span class="line">    <span class="type">StructField</span>(<span class="string">"id"</span>,<span class="type">IntegerType</span>,<span class="literal">true</span>),</span><br><span class="line">    <span class="type">StructField</span>(<span class="string">"name"</span>,<span class="type">StringType</span>,<span class="literal">true</span>)</span><br><span class="line">))</span><br><span class="line"><span class="keyword">val</span> df = sparkSession.createDataFrame(stuInfo,schema)</span><br><span class="line"><span class="keyword">import</span> sparkSession.implicits._</span><br><span class="line"><span class="keyword">val</span> res = df.select(<span class="string">"id"</span>,<span class="string">"name"</span>).orderBy($<span class="string">"id"</span>desc)</span><br><span class="line">res.show()</span><br><span class="line">sparkSession.stop()</span><br></pre></td></tr></table></figure>
+<h3 id="DataSet操作"><a href="#DataSet操作" class="headerlink" title="DataSet操作"></a>DataSet操作</h3><h4 id="SQL方式"><a href="#SQL方式" class="headerlink" title="SQL方式"></a>SQL方式</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> sparkSession = <span class="type">SparkSession</span>.builder().appName(<span class="string">"DataSet"</span>).master(<span class="string">"local[2]"</span>).getOrCreate()</span><br><span class="line"><span class="keyword">val</span> fileRDD = sparkSession.sparkContext.textFile(<span class="string">"c://input//student"</span>)</span><br><span class="line"><span class="keyword">val</span> rdd = fileRDD.map(line=&gt;&#123;</span><br><span class="line">    <span class="keyword">val</span> fields = line.split(<span class="string">" "</span>)</span><br><span class="line">    <span class="keyword">val</span> id = fields(<span class="number">0</span>).toInt</span><br><span class="line">    <span class="keyword">val</span> name = fields(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">val</span> age=  fields(<span class="number">2</span>).toInt</span><br><span class="line">    <span class="keyword">val</span> faceValue = fields(<span class="number">3</span>).toDouble</span><br><span class="line">    student(id,name,age,faceValue)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">import</span> sparkSession.implicits._</span><br><span class="line"><span class="keyword">val</span> ds = rdd.toDS()</span><br><span class="line">ds.createOrReplaceTempView(<span class="string">"stu"</span>)</span><br><span class="line"><span class="keyword">val</span> res = sparkSession.sql(<span class="string">"select * from stu"</span>)</span><br><span class="line">res.show()</span><br><span class="line">sparkSession.stop()</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">student</span>(<span class="params">id:<span class="type">Int</span>,name:<span class="type">String</span>,age:<span class="type">Int</span>,faceValue:<span class="type">Double</span></span>)</span></span><br></pre></td></tr></table></figure>
+<h4 id="API方式"><a href="#API方式" class="headerlink" title="API方式"></a>API方式</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> sparkSession = <span class="type">SparkSession</span>.builder().appName(<span class="string">"DataSet"</span>).master(<span class="string">"local[2]"</span>).getOrCreate()</span><br><span class="line"><span class="keyword">val</span> fileRDD = sparkSession.sparkContext.textFile(<span class="string">"c://input//student"</span>)</span><br><span class="line"><span class="keyword">val</span> rdd = fileRDD.map(line=&gt;&#123;</span><br><span class="line">    <span class="keyword">val</span> fields = line.split(<span class="string">" "</span>)</span><br><span class="line">    <span class="keyword">val</span> id = fields(<span class="number">0</span>).toInt</span><br><span class="line">    <span class="keyword">val</span> name = fields(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">val</span> age=  fields(<span class="number">2</span>).toInt</span><br><span class="line">    <span class="keyword">val</span> faceValue = fields(<span class="number">3</span>).toDouble</span><br><span class="line">    student(id,name,age,faceValue)</span><br><span class="line">&#125;)</span><br><span class="line">    <span class="keyword">import</span> sparkSession.implicits._</span><br><span class="line">    <span class="keyword">val</span> ds = rdd.toDS()</span><br><span class="line">    <span class="keyword">val</span> res =ds.select(<span class="string">"id"</span>,<span class="string">"name"</span>).orderBy(<span class="string">"age"</span>)</span><br><span class="line">res.show()</span><br><span class="line">sparkSession.stop()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">student</span>(<span class="params">id:<span class="type">Int</span>,name:<span class="type">String</span>,age:<span class="type">Int</span>,faceValue:<span class="type">Double</span></span>)</span></span><br></pre></td></tr></table></figure>
+<h3 id="RDD-lt-gt-DF-lt-gt-DS互相转换"><a href="#RDD-lt-gt-DF-lt-gt-DS互相转换" class="headerlink" title="RDD &lt;=&gt;DF &lt;=&gt; DS互相转换"></a>RDD &lt;=&gt;DF &lt;=&gt; DS互相转换</h3><p>RDD、DataFrame、Dataset三者有许多共性，有各自适用的场景常常需要在三者之间无缝转换</p>
+<h4 id="DataFrame-Dataset转RDD："><a href="#DataFrame-Dataset转RDD：" class="headerlink" title="DataFrame/Dataset转RDD："></a>DataFrame/Dataset转RDD：</h4><p>这个转换很简单</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> rdd1:<span class="type">RDD</span>[<span class="type">Row</span>] = df.rdd</span><br><span class="line"><span class="keyword">val</span> rdd2:<span class="type">RDD</span>[<span class="type">Student</span>] = ds.rdd</span><br></pre></td></tr></table></figure>
+<h4 id="RDD转DataFrame："><a href="#RDD转DataFrame：" class="headerlink" title="RDD转DataFrame："></a>RDD转DataFrame：</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> spark.implicits._</span><br><span class="line"><span class="keyword">val</span> testDF = rdd.map &#123;line=&gt;</span><br><span class="line">      (line._1,line._2)</span><br><span class="line">    &#125;.toDF(<span class="string">"col1"</span>,<span class="string">"col2"</span>)</span><br><span class="line"><span class="comment">/*------------------------*/</span></span><br><span class="line">    <span class="keyword">import</span> sparkSession.implicits._</span><br><span class="line">    <span class="keyword">val</span> df = rdd.toDF()</span><br></pre></td></tr></table></figure>
+<p>一般用元组把一行的数据写在一起，然后在toDF中指定字段名</p>
+<h4 id="RDD转Dataset："><a href="#RDD转Dataset：" class="headerlink" title="RDD转Dataset："></a>RDD转Dataset：</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> spark.implicits._</span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Coltest</span>(<span class="params">col1:<span class="type">String</span>,col2:<span class="type">Int</span></span>)<span class="keyword">extends</span> <span class="title">Serializable</span> <span class="title">//定义字段名和类型</span></span></span><br><span class="line"><span class="class"><span class="title">val</span> <span class="title">testDS</span> </span>= rdd.map &#123;line=&gt;</span><br><span class="line">      <span class="type">Coltest</span>(line._1,line._2)</span><br><span class="line">    &#125;.toDS</span><br><span class="line"><span class="comment">/*------------------------*/</span></span><br><span class="line"><span class="keyword">import</span> sparkSession.implicits._</span><br><span class="line"><span class="keyword">val</span> ds = rdd.toDS()</span><br></pre></td></tr></table></figure>
+<p>可以注意到，定义每一行的类型（case class）时，已经给出了字段名和类型，后面只要往case class里面添加值即可</p>
+<h4 id="Dataset转DataFrame："><a href="#Dataset转DataFrame：" class="headerlink" title="Dataset转DataFrame："></a>Dataset转DataFrame：</h4><p>这个也很简单，因为只是把case class封装成Row</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> spark.implicits._</span><br><span class="line"><span class="keyword">val</span> testDF = testDS.toDF</span><br></pre></td></tr></table></figure>
+<h4 id="DataFrame转Dataset："><a href="#DataFrame转Dataset：" class="headerlink" title="DataFrame转Dataset："></a>DataFrame转Dataset：</h4><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> spark.implicits._</span><br><span class="line"><span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Coltest</span>(<span class="params">col1:<span class="type">String</span>,col2:<span class="type">Int</span></span>)<span class="keyword">extends</span> <span class="title">Serializable</span> <span class="title">//定义样例类</span> <span class="title">字段名和类型</span></span></span><br><span class="line"><span class="class"><span class="title">val</span> <span class="title">testDS</span> </span>= testDF.as[<span class="type">Coltest</span>]</span><br></pre></td></tr></table></figure>
+<p>这种方法就是在给出每一列的类型后，使用as方法，转成Dataset，这在数据类型是DataFrame又需要针对各个字段处理时极为方便</p>
+<h4 id="特别注意："><a href="#特别注意：" class="headerlink" title="特别注意："></a>特别注意：</h4><blockquote>
+<p>在使用一些特殊的操作时，一定要加上 import spark.implicits._ 不然toDF、toDS无法使用</p>
+</blockquote>
+<h3 id="文件的写入写出"><a href="#文件的写入写出" class="headerlink" title="文件的写入写出"></a>文件的写入写出</h3><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> sparkSession = <span class="keyword">new</span> <span class="type">SparkSession</span>()</span><br></pre></td></tr></table></figure>
+<h2 id="数据源"><a href="#数据源" class="headerlink" title="数据源"></a>数据源</h2><h3 id="local"><a href="#local" class="headerlink" title="local"></a>local</h3><p>###</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spark/" rel="tag"># Spark</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/04/Spark/" rel="next" title="SparkCore--漫漫之路">
+                <i class="fa fa-chevron-left"></i> SparkCore--漫漫之路
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/17/Linux的权限问题/" rel="prev" title="Linux的权限问题">
+                Linux的权限问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">yimting@aliyun.com</p>
+              <div class="site-description motion-element" itemprop="description">路漫漫其修远兮</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:yimting@aliyun.com" title="E-Mail &rarr; mailto:yimting@aliyun.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SparkSQL"><span class="nav-number">1.</span> <span class="nav-text">SparkSQL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SparkSQL-1"><span class="nav-number">1.0.1.</span> <span class="nav-text">SparkSQL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DataFrames"><span class="nav-number">1.0.2.</span> <span class="nav-text">DataFrames</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DataSets"><span class="nav-number">1.0.3.</span> <span class="nav-text">DataSets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDD、DataFrame、DataSet-之间的区别"><span class="nav-number">1.0.4.</span> <span class="nav-text">RDD、DataFrame、DataSet 之间的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#三者的关系"><span class="nav-number">1.0.4.1.</span> <span class="nav-text">三者的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#共性："><span class="nav-number">1.0.4.2.</span> <span class="nav-text">共性：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#区别"><span class="nav-number">1.0.4.3.</span> <span class="nav-text">区别 :</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作"><span class="nav-number">1.1.</span> <span class="nav-text">操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DataFrame操作"><span class="nav-number">1.1.1.</span> <span class="nav-text">DataFrame操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL的方式"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">SQL的方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编程的方式"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">编程的方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DataSet操作"><span class="nav-number">1.1.2.</span> <span class="nav-text">DataSet操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL方式"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">SQL方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#API方式"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">API方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDD-lt-gt-DF-lt-gt-DS互相转换"><span class="nav-number">1.1.3.</span> <span class="nav-text">RDD &lt;=&gt;DF &lt;=&gt; DS互相转换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DataFrame-Dataset转RDD："><span class="nav-number">1.1.3.1.</span> <span class="nav-text">DataFrame/Dataset转RDD：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RDD转DataFrame："><span class="nav-number">1.1.3.2.</span> <span class="nav-text">RDD转DataFrame：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RDD转Dataset："><span class="nav-number">1.1.3.3.</span> <span class="nav-text">RDD转Dataset：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dataset转DataFrame："><span class="nav-number">1.1.3.4.</span> <span class="nav-text">Dataset转DataFrame：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DataFrame转Dataset："><span class="nav-number">1.1.3.5.</span> <span class="nav-text">DataFrame转Dataset：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特别注意："><span class="nav-number">1.1.3.6.</span> <span class="nav-text">特别注意：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件的写入写出"><span class="nav-number">1.1.4.</span> <span class="nav-text">文件的写入写出</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据源"><span class="nav-number">1.2.</span> <span class="nav-text">数据源</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#local"><span class="nav-number">1.2.1.</span> <span class="nav-text">local</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yimting@aliyun.com</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

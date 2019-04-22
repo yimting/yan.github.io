@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#B0E0E6">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/Head.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/Head.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo.svg?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#B0E0E6">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="​    对于Sqoop的一些基本的操作，Sqoop的操作对于数据的导入导出">
+<meta name="keywords" content="sqoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sqoop--漫漫之路">
+<meta property="og:url" content="http://yimting.github.io/2019/04/20/Sqoop-漫漫之路/index.html">
+<meta property="og:site_name" content="Baki&#39;Blog">
+<meta property="og:description" content="​    对于Sqoop的一些基本的操作，Sqoop的操作对于数据的导入导出">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://i.loli.net/2019/04/21/5cbc038b8a1ba.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/04/21/5cbc038b874eb.png">
+<meta property="og:image" content="http://yimting.github.io/2019/04/20/Sqoop-漫漫之路/lib文件夹.png">
+<meta property="og:image" content="http://yimting.github.io/2019/04/20/Sqoop-漫漫之路/Sqoop2Mysql.png">
+<meta property="og:image" content="http://yimting.github.io/2019/04/20/Sqoop-漫漫之路/toHdfs.png">
+<meta property="og:image" content="http://yimting.github.io/2019/04/20/Sqoop-漫漫之路/oneMap.png">
+<meta property="og:updated_time" content="2019-04-21T13:47:16.020Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sqoop--漫漫之路">
+<meta name="twitter:description" content="​    对于Sqoop的一些基本的操作，Sqoop的操作对于数据的导入导出">
+<meta name="twitter:image" content="https://i.loli.net/2019/04/21/5cbc038b8a1ba.jpg">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yimting.github.io/2019/04/20/Sqoop-漫漫之路/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Sqoop--漫漫之路 | Baki'Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Baki'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">yimting@aliyun.com</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yimting.github.io/2019/04/20/Sqoop-漫漫之路/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yimting@aliyun.com">
+      <meta itemprop="description" content="路漫漫其修远兮">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Baki'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Sqoop--漫漫之路
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-20 21:52:54" itemprop="dateCreated datePublished" datetime="2019-04-20T21:52:54+08:00">2019-04-20</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-04-21 21:47:16" itemprop="dateModified" datetime="2019-04-21T21:47:16+08:00">2019-04-21</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Learn/" itemprop="url" rel="index"><span itemprop="name">Learn</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>​    对于Sqoop的一些基本的操作，Sqoop的操作对于数据的导入导出<a id="more"></a>（迁移操作）还是重要的。</p>
+<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><a href="https://sqoop.apache.org" target="_blank" rel="noopener">Sqoop官网</a></p>
+<p>​    Sqoop是一个用户Hadoop与数据库之间传输数据的工具，是用于 Hadoop 的结构化数据存储 之间进行高效传输批量的数据。</p>
+<p>​    可以使用Sqoop将数据从关系型数据库，导入到Hadoop分布式文件系统中。</p>
+<p>​    Sqoop自动执行此过程的大部分过程，依靠数据库来描述要导入的数据模式，Sqoop使用MapReduce导入和到处数据，提供并行操作和容错。</p>
+<h2 id="Sqoop的版本差异问题"><a href="#Sqoop的版本差异问题" class="headerlink" title="Sqoop的版本差异问题"></a>Sqoop的版本差异问题</h2><ul>
+<li>版本号对比</li>
+</ul>
+<p>两代之间是两个完全不同的版本，相互不兼容 </p>
+<blockquote>
+<p>sqoop1：1.4.x </p>
+<p>sqoop2：1.99.</p>
+</blockquote>
+<ul>
+<li>sqoop2比sqoop1的改进</li>
+</ul>
+<ol>
+<li>引入sqoop server，集中化管理connector等 </li>
+<li>多种访问方式：CLI,Web UI，REST API </li>
+<li>引入基于角色 的安全机制</li>
+</ol>
+<blockquote>
+<p>Sqoop分为两个版本：sqoop1  与sqoop2 </p>
+<p>对于sqoop2来说，是由两个部分组成，服务器端与客户端，类于hive中hiveserver2 与beeline的概念，在这种情况下sqoop2属于跨节点操作，性能以及稳定性目前比较差，不推荐使用</p>
+<p>Sqoop1 是纯客户端，性能比较稳定，推荐使用</p>
+</blockquote>
+<h1 id="原理示意图"><a href="#原理示意图" class="headerlink" title="原理示意图"></a>原理示意图</h1><p><img src="https://i.loli.net/2019/04/21/5cbc038b8a1ba.jpg" alt="sqoop架构图.jpg"></p>
+<p>思考：</p>
+<ul>
+<li>只是使用到了 MR 的 Map 阶段，没有使用到Reduce阶段<ul>
+<li>Sqoop只是为了数据的迁移，并没有涉及数据的统计与计算所以并不需要reduce阶段</li>
+</ul>
+</li>
+<li>Sqoop 底层 为什么需要 MR 来实现<ul>
+<li>Mr 是一个分布式的计算框架， 当需要传输海量数据的时候效率更高些</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>工作机制：</p>
+<p>将导入或者导出的命令翻译成MapReduce程序来实现；</p>
+<p>翻译出的 Mr 中主要是对 inputformat 和 outputformat</p>
+</blockquote>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p><img src="https://i.loli.net/2019/04/21/5cbc038b874eb.png" alt="sqoop-env-sh.png"></p>
+<ol>
+<li>首先配置conf路径下的配置文件，编辑其中的环境变量</li>
+<li>将mysql的Jar包， 拷入到 Sqoop中的lib目录下面</li>
+</ol>
+<p><img src="/2019/04/20/Sqoop-漫漫之路/lib文件夹.png" alt="lib"></p>
+<ol start="3">
+<li>测试Sqoop的配置是否成功  </li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[dy@centos sqoop-1.4.6]$ bin/sqoop help</span><br><span class="line">Warning: /opt/app/sqoop-1.4.6/../hcatalog does not exist! HCatalog jobs will fail.</span><br><span class="line">Please set $HCAT_HOME to the root of your HCatalog installation.</span><br><span class="line">Warning: /opt/app/sqoop-1.4.6/../accumulo does not exist! Accumulo imports will fail.</span><br><span class="line">Please set $ACCUMULO_HOME to the root of your Accumulo installation.</span><br><span class="line">19/04/21 15:50:27 INFO sqoop.Sqoop: Running Sqoop version: 1.4.6</span><br><span class="line">usage: sqoop COMMAND [ARGS]</span><br><span class="line"></span><br><span class="line">Available commands:</span><br><span class="line">  codegen            Generate code to interact with database records</span><br><span class="line">  create-hive-table  Import a table definition into Hive</span><br><span class="line">  eval               Evaluate a SQL statement and display the results</span><br><span class="line">  export             Export an HDFS directory to a database table</span><br><span class="line">  help               List available commands</span><br><span class="line">  import             Import a table from a database to HDFS</span><br><span class="line">  import-all-tables  Import tables from a database to HDFS</span><br><span class="line">  import-mainframe   Import datasets from a mainframe server to HDFS</span><br><span class="line">  job                Work with saved jobs</span><br><span class="line">  list-databases     List available databases on a server</span><br><span class="line">  list-tables        List available tables in a database</span><br><span class="line">  merge              Merge results of incremental imports</span><br><span class="line">  metastore          Run a standalone Sqoop metastore</span><br><span class="line">  version            Display version information</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>通过 <strong>list-databases</strong> 列出MySQL 数据库中的列表</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/sqoop list-databases --connect jdbc:mysql://192.168.168.14:3306 --username root --password root</span><br></pre></td></tr></table></figure>
+<p>OR</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin/sqoop list-databases \</span><br><span class="line">--connect jdbc:mysql://192.168.168.14:3306 \</span><br><span class="line">--username root \</span><br><span class="line">--password root</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/04/20/Sqoop-漫漫之路/Sqoop2Mysql.png" alt="2mysql"></p>
+<h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><h3 id="从-Mysql-导入数据到-HDFS"><a href="#从-Mysql-导入数据到-HDFS" class="headerlink" title="从 Mysql 导入数据到  HDFS"></a>从 Mysql 导入数据到  HDFS</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">bin/sqoop import \</span><br><span class="line">--connect jdbc:mysql://192.168.168.14:3306/test \</span><br><span class="line">--username root \</span><br><span class="line">--password root \</span><br><span class="line">--table to_hdfs \</span><br><span class="line">--target-dir /to_hdfs \   --指定保存到HDFS上的那个位置</span><br><span class="line">--num-mappers 1 		  --控制 Map 阶段的数量（没设置，就默认为导入前的行数数量）</span><br></pre></td></tr></table></figure>
+<ul>
+<li>导入完成之后，最终的表 会存在于 HDFS的 当前用户目录下</li>
+</ul>
+<p><img src="/2019/04/20/Sqoop-漫漫之路/toHdfs.png" alt="toHdfs"></p>
+<ul>
+<li>设置Mapper 的数量的时候，那么结果就只会产生一个</li>
+</ul>
+<p><img src="/2019/04/20/Sqoop-漫漫之路/oneMap.png" alt="oneMap"></p>
+<h4 id="Config"><a href="#Config" class="headerlink" title="Config"></a>Config</h4><ul>
+<li>在导入数据的时候，如果HDFS输出的目标路径存在则删除  </li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">bin/sqoop import \</span><br><span class="line">--connect jdbc:mysql://192.168.168.14:3306/test \</span><br><span class="line">--username root \</span><br><span class="line">--password root \</span><br><span class="line">--table to_hdfs \</span><br><span class="line">--delete-target-dir \  -- 如果指定的文件已经存在，那么进行删除操作</span><br><span class="line">--target-dir /to_hdfs2  \</span><br><span class="line">--num-mappers 1</span><br></pre></td></tr></table></figure>
+<ul>
+<li>导入数据的时候，增加指定的分隔符</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">bin/sqoop import \</span><br><span class="line">--connect jdbc:mysql://192.168.168.14:3306/test \</span><br><span class="line">--username root \</span><br><span class="line">--password root \</span><br><span class="line">--table to_hdfs \</span><br><span class="line">--fields-terminated-by '\t' \  --指定导入数据的分割符</span><br><span class="line">--delete-target-dir \  </span><br><span class="line">--target-dir /to_hdfs2  \</span><br><span class="line">--num-mappers 1</span><br></pre></td></tr></table></figure>
+<h4 id="增量导入"><a href="#增量导入" class="headerlink" title="增量导入"></a>增量导入</h4><ul>
+<li>首先查看一下 import 的 <em>–help</em></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/sqoop import --help</span><br></pre></td></tr></table></figure>
+<ul>
+<li>下面查找到增量导入的信息</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Incremental import arguments:</span><br><span class="line">   --check-column &lt;column&gt;        Source column to check for incremental</span><br><span class="line">                                  change</span><br><span class="line">   --incremental &lt;import-type&gt;    Define an incremental import of type</span><br><span class="line">                                  'append' or 'lastmodified'</span><br><span class="line">   --last-value &lt;value&gt;           Last imported value in the incremental</span><br><span class="line">                                  check column</span><br></pre></td></tr></table></figure>
+<p><strong>增量导入参数：</strong></p>
+<table>
+<thead>
+<tr>
+<th>标识</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--check-column (col)</code></td>
+<td>指定在确定要导入的行时要检查的列。<br>（该列不应为CHAR / NCHAR / VARCHAR / VARNCHAR / LONGVARCHAR / LONGNVARCHAR类型）</td>
+</tr>
+<tr>
+<td><code>--incremental (mode)</code></td>
+<td>指定Sqoop如何确定哪些行是新的。模式的合法值包括<code>append</code>和<code>lastmodified</code>。</td>
+</tr>
+<tr>
+<td><code>--last-value (value)</code></td>
+<td>指定上一个导入的检查列的最大值。</td>
+</tr>
+</tbody>
+</table>
+<p>Sqoop支持两种类型的增量导入：<code>append</code>和<code>lastmodified</code>。可以使用<code>--incremental</code>参数指定要执行的增量导入的类型。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">bin/sqoop import \</span><br><span class="line">--connect jdbc:mysql://192.168.168.14:3306/text \</span><br><span class="line">--username root \</span><br><span class="line">--password root \</span><br><span class="line">--fields-terminated-by '\t' \</span><br><span class="line">--target-dir /to_hdfs \</span><br><span class="line">--num-mappers 1 \</span><br><span class="line">--check-column id \</span><br><span class="line">--incremental append \   --选择导入类型 `append` | `lastmodified`</span><br><span class="line">--last-value 8       --已经导入多少行 | 从第 n+1 行开始导入 | 检查列的最后值</span><br></pre></td></tr></table></figure>
+<h3 id="从-HDFS-导出数据到-Mysql"><a href="#从-HDFS-导出数据到-Mysql" class="headerlink" title="从 HDFS 导出数据到 Mysql"></a>从 HDFS 导出数据到 Mysql</h3><p>将数据从HDFS导出到RDBMS数据库</p>
+<p>导出前，目标表必须存在于目标数据库中。</p>
+<blockquote>
+<p> 默认操作是从将文件中的数据使用INSERT语句插入到表中</p>
+<p>更新模式下，是生成UPDATE语句更新表数据</p>
+</blockquote>
+<ul>
+<li>首先在 Mysql 中创建一张表， 用于接收 Hdfs 上导出的数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">create table if not exists to_mysql (</span><br><span class="line">id int primary key not null,</span><br><span class="line">name varchar（25） not null </span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用 Sqoop 从 HDFS 上导出到 MySQL 表中</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">bin/sqoop export \</span><br><span class="line">--connect jdbc:mysql://192.168.168.14:3306/test \</span><br><span class="line">--username root \</span><br><span class="line">--password root \</span><br><span class="line">--table to_mysql \</span><br><span class="line">--export-dir /user/username/to_hdfs \</span><br><span class="line">--input-fields-terminated-by '\t'</span><br></pre></td></tr></table></figure>
+<h3 id="从-Mysql-中导入数据到-Hive"><a href="#从-Mysql-中导入数据到-Hive" class="headerlink" title="从 Mysql 中导入数据到 Hive"></a>从 Mysql 中导入数据到 Hive</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">bin/sqoop import \</span><br><span class="line">--connect jdbc:mysql://192.168.168.14:3306/test \</span><br><span class="line">--username root \</span><br><span class="line">--password root \</span><br><span class="line">--table to_hdfs \</span><br><span class="line">--target-dir /to_hdfs3 \</span><br><span class="line">--hive-import \</span><br><span class="line">--hive-database hive_database \</span><br><span class="line">--hive-table hive_table \</span><br><span class="line">--num-mappers 1 \</span><br><span class="line">--fields-terminated-by '\t'</span><br></pre></td></tr></table></figure>
+<h3 id="Sqoop-Job-Create"><a href="#Sqoop-Job-Create" class="headerlink" title="Sqoop-Job-Create"></a>Sqoop-Job-Create</h3><ul>
+<li>Sqoop 的 Job ， 就相当于在 Sqoop 中创建了一个模板， 下次使用，直接使用改Job编辑好的命令操作</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">bin/sqoop job --help </span><br><span class="line"></span><br><span class="line">====================================================================================================</span><br><span class="line"></span><br><span class="line">19/04/21 21:39:50 INFO sqoop.Sqoop: Running Sqoop version: 1.4.6</span><br><span class="line">usage: sqoop job [GENERIC-ARGS] [JOB-ARGS] [-- [&lt;tool-name&gt;] [TOOL-ARGS]]</span><br><span class="line"></span><br><span class="line">Job management arguments:</span><br><span class="line">   --create &lt;job-id&gt;            Create a new saved job</span><br><span class="line">   --delete &lt;job-id&gt;            Delete a saved job</span><br><span class="line">   --exec &lt;job-id&gt;              Run a saved job</span><br><span class="line">   --help                       Print usage instructions</span><br><span class="line">   --list                       List saved jobs</span><br><span class="line">   --meta-connect &lt;jdbc-uri&gt;    Specify JDBC connect string for the</span><br><span class="line">                                metastore</span><br><span class="line">   --show &lt;job-id&gt;              Show the parameters for a saved job</span><br><span class="line">   --verbose                    Print more information while working</span><br><span class="line"></span><br><span class="line">====================================================================================================</span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建 Job</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">bin/sqoop job \</span><br><span class="line">--create stu_info \</span><br><span class="line">-- \</span><br><span class="line">import \</span><br><span class="line">--connect jdbc:mysql://192.168.168.14:3306/test \</span><br><span class="line">--username root \</span><br><span class="line">--password root \</span><br><span class="line">--table to_hdfs \</span><br><span class="line">--target-dir /to_hdfs \</span><br><span class="line">--num-mappers 1</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Job 的使用</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">==查看已经存在的Job==</span><br><span class="line">bin/sqoop job --list</span><br><span class="line"></span><br><span class="line">==Available jobs: </span><br><span class="line">   ==Job_name </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">==查看Job的详细信息==参数用于检查或验证特定的工作，及其详细信息==</span><br><span class="line">bin/sqoop job --show job_name</span><br><span class="line">==执行Job==</span><br><span class="line">bin/sqoop job --exec job_name</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/sqoop/" rel="tag"># sqoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/17/总结一些容易使用的一些小配置/" rel="next" title="使用的一些小配置">
+                <i class="fa fa-chevron-left"></i> 使用的一些小配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/22/Hbase-漫漫之路/" rel="prev" title="Hbase--漫漫之路">
+                Hbase--漫漫之路 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">yimting@aliyun.com</p>
+              <div class="site-description motion-element" itemprop="description">路漫漫其修远兮</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:yimting@aliyun.com" title="E-Mail &rarr; mailto:yimting@aliyun.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Sqoop的版本差异问题"><span class="nav-number">1.1.</span> <span class="nav-text">Sqoop的版本差异问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原理示意图"><span class="nav-number">2.</span> <span class="nav-text">原理示意图</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">3.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实践"><span class="nav-number">4.</span> <span class="nav-text">实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#从-Mysql-导入数据到-HDFS"><span class="nav-number">4.0.1.</span> <span class="nav-text">从 Mysql 导入数据到  HDFS</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Config"><span class="nav-number">4.0.1.1.</span> <span class="nav-text">Config</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#增量导入"><span class="nav-number">4.0.1.2.</span> <span class="nav-text">增量导入</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从-HDFS-导出数据到-Mysql"><span class="nav-number">4.0.2.</span> <span class="nav-text">从 HDFS 导出数据到 Mysql</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从-Mysql-中导入数据到-Hive"><span class="nav-number">4.0.3.</span> <span class="nav-text">从 Mysql 中导入数据到 Hive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sqoop-Job-Create"><span class="nav-number">4.0.4.</span> <span class="nav-text">Sqoop-Job-Create</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yimting@aliyun.com</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

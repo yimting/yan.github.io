@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#B0E0E6">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/Head.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/Head.jpg?v=7.1.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/logo.svg?v=7.1.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.0" color="#B0E0E6">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.1.0',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="SparkCore学习之路 什么是Spark ——-&amp;gt; 如何使用   可以做什么 ——-&amp;gt; 应用场景是什么 如何运行 ——-&amp;gt; 整体框架  ——-&amp;gt; 任务流程">
+<meta name="keywords" content="Spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SparkCore--漫漫之路">
+<meta property="og:url" content="http://yimting.github.io/2019/04/04/Spark/index.html">
+<meta property="og:site_name" content="Baki&#39;Blog">
+<meta property="og:description" content="SparkCore学习之路 什么是Spark ——-&amp;gt; 如何使用   可以做什么 ——-&amp;gt; 应用场景是什么 如何运行 ——-&amp;gt; 整体框架  ——-&amp;gt; 任务流程">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yimting.github.io/2019/04/04/Spark/Mr_function.png">
+<meta property="og:image" content="http://yimting.github.io/2019/04/04/Spark/Mr_shuffle.png">
+<meta property="og:image" content="http://yimting.github.io/2019/04/04/Spark/Spark_compared.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/JerryLead/SparkInternals/master/markdown/PNGfigures/deploy.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/oeljeklaus-you/SparkCore/master/image/Spark%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="http://i4.bvimg.com/11835/8936465c7779fb52.png">
+<meta property="og:image" content="http://i4.bvimg.com/11835/8797ab583b68fc05.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/855959/201610/855959-20161009115627506-271998705.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/855959/201610/855959-20161009115917862-1919710551.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/855959/201610/855959-20161009120124230-1553441050.png">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1832028-dc92297e1cbc8533?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://i2.bvimg.com/11835/44e7cd31050b3fa7.png">
+<meta property="og:image" content="http://i2.bvimg.com/11835/3800fff4b5796f32.png">
+<meta property="og:image" content="http://i2.bvimg.com/11835/db3ba1bcc096131a.png">
+<meta property="og:updated_time" content="2019-04-18T13:51:38.225Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SparkCore--漫漫之路">
+<meta name="twitter:description" content="SparkCore学习之路 什么是Spark ——-&amp;gt; 如何使用   可以做什么 ——-&amp;gt; 应用场景是什么 如何运行 ——-&amp;gt; 整体框架  ——-&amp;gt; 任务流程">
+<meta name="twitter:image" content="http://yimting.github.io/2019/04/04/Spark/Mr_function.png">
+
+
+
+
+
+  
+  
+  <link rel="canonical" href="http://yimting.github.io/2019/04/04/Spark/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>SparkCore--漫漫之路 | Baki'Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Baki'Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">yimting@aliyun.com</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yimting.github.io/2019/04/04/Spark/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="yimting@aliyun.com">
+      <meta itemprop="description" content="路漫漫其修远兮">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Baki'Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SparkCore--漫漫之路
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-04-04 09:26:58" itemprop="dateCreated datePublished" datetime="2019-04-04T09:26:58+08:00">2019-04-04</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-04-18 21:51:38" itemprop="dateModified" datetime="2019-04-18T21:51:38+08:00">2019-04-18</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Learn/" itemprop="url" rel="index"><span itemprop="name">Learn</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="SparkCore学习之路"><a href="#SparkCore学习之路" class="headerlink" title="SparkCore学习之路"></a>SparkCore学习之路</h1><blockquote>
+<p>什么是Spark ——-&gt; 如何使用  </p>
+<p>可以做什么 ——-&gt; 应用场景是什么</p>
+<p>如何运行 ——-&gt; 整体框架  ——-&gt; 任务流程<br><a id="more"></a><br><a href="https://andone1cc.github.io/tags/Spark%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" target="_blank" rel="noopener">Spark学习总结</a></p>
+</blockquote>
+<h2 id="什么是Spark"><a href="#什么是Spark" class="headerlink" title="什么是Spark"></a>什么是Spark</h2><ul>
+<li><p>Spark是用于处理大规模数据的统一分析引擎</p>
+</li>
+<li><p>Spark是分布式的基于==内存==的迭代式计算框架，当然它也可以基于磁盘做迭代计算 ( 有异议的地方 )</p>
+</li>
+<li><p>速度快</p>
+<ul>
+<li>拥有++DAG++调度器、查询优化器以及物理执行引擎从而高性能的实现 批处理 和 流数据 处理。</li>
+</ul>
+</li>
+<li><p>易用性强</p>
+<ul>
+<li>可以使用Java，Scala，Python，R以及SQL快速的写Spark应用</li>
+<li>提供的高级算子便于并行执行，并且可以使用Scala、Python、等shell端交互式运行Spark应用。</li>
+</ul>
+</li>
+<li><p>支持多种模式的运行</p>
+<ul>
+<li>Spark可以直接运行以自身的 <a href="http://spark.apache.org/docs/latest/spark-standalone.html" target="_blank" rel="noopener">Standalone</a> 集群模式运行,</li>
+<li>不过企业级用的比较多的是<a href="https://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-site/YARN.html" target="_blank" rel="noopener">Hadoop Yarn</a>模式，当然也有<a href="https://mesos.apache.org/" target="_blank" rel="noopener">Mesos</a>和<a href="https://kubernetes.io/" target="_blank" rel="noopener">Kubernetes</a>模式。</li>
+<li>可以获取不限于来自于<a href="https://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-hdfs/HdfsUserGuide.html" target="_blank" rel="noopener">HDFS</a>、<a href="https://cassandra.apache.org/" target="_blank" rel="noopener">Apache Cassandra</a>、<a href="https://hbase.apache.org/" target="_blank" rel="noopener">Apache HBase</a>和<a href="https://hive.apache.org/" target="_blank" rel="noopener">Apache Hive</a>等上百种数据源。</li>
+</ul>
+</li>
+<li><p>丰富的库支持 ( 通用性 ) [  四大组件  ]</p>
+<blockquote>
+<p> <code>SparkSQL(处理结构化数据)</code> <code>Streaming(流式处理框架)</code> <code>MLlib(机器学习)</code> <code>Graphx(图形计算)</code></p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>SparkCore 是 Spark的核心编程框架, 其中RDD代表了对于数据集进行的抽象概念 , 提供了对数据进行并行化,和容错的处理</p>
+<p>​            几乎对数据的处理都放置在内存中, 所以比MR更加的高效</p>
+<p>SparkSQL  是  类似于Hive , 但是 Spark SQL 与 SparkCore 无缝结合 , SQL 具有多种数据源[JSON,Hive,Mysql,Parquet..]</p>
+<p>SparkStreaming 是 用来对于流数据 , 进行一定的时间段的批次处理. 将数据按照指定的时间片,积累为Dsteam(RDD系列)对其处理</p>
+</blockquote>
+<hr>
+<h3 id="Spark-与-Hadoop-MR-之间的关系"><a href="#Spark-与-Hadoop-MR-之间的关系" class="headerlink" title="Spark 与 Hadoop(MR) 之间的关系"></a>Spark 与 Hadoop(MR) 之间的关系</h3><blockquote>
+<p>Spark 仅仅是个框架 做对比的话 也是与 Hadoop 中的 MapReduce 做对比</p>
+</blockquote>
+<p>Mapreduce 将并行计算,抽象到了两个函数 : Map , Reduce</p>
+<p><img src="/2019/04/04/Spark/Mr_function.png" alt="Mapreduce"></p>
+<p>整个Mr的核心  “ 分而治之 “ 策略   [  数据在Mr的流程中 , 存在多次的操作 ]  :</p>
+<p><img src="/2019/04/04/Spark/Mr_shuffle.png" alt="MRShuffle流程"></p>
+<p>::: hljs-center</p>
+<p>慢慢的发现人们数据处理应用的场景越来越广泛, 对于Hadoop的要求也是越来越高 人们都想拥有一款综合数据处理的计算框架, 这时Spark诞生了</p>
+<p>:::</p>
+<p><img src="/2019/04/04/Spark/Spark_compared.png" alt="Spark与其他框架对比"></p>
+<h2 id="SparkShuffle-与-MR-shuffle-的区别"><a href="#SparkShuffle-与-MR-shuffle-的区别" class="headerlink" title="SparkShuffle 与 MR shuffle 的区别"></a>SparkShuffle 与 MR shuffle 的区别</h2><p>在 Spark 中 Shuffle 分为 :</p>
+<hr>
+<h2 id="Spark整体框架-执行原理"><a href="#Spark整体框架-执行原理" class="headerlink" title="Spark整体框架+执行原理"></a>Spark整体框架+<a href="https://github.com/oeljeklaus-you/SparkCore/blob/master/README.md" target="_blank" rel="noopener">执行原理</a></h2><p><img src="https://raw.githubusercontent.com/JerryLead/SparkInternals/master/markdown/PNGfigures/deploy.png" alt="Spark架构"></p>
+<p>从上图中不难发现 :</p>
+<ul>
+<li>整个集群分为Master节点和Worker节点, 相当于Hadoop中的 Master 和 Slave节点</li>
+<li>Master 节点上常驻 Master 守护进程, 负责管理全部的 Worker 节点</li>
+<li>Worker 节点上常驻 Worker 守护进程 , 负责与 Master 节点通信并且管理 Executors</li>
+<li>Driver 也是 Application main 就是用户自己写的 Spark 程序（driver program），比如 WordCount.scala。</li>
+</ul>
+<blockquote>
+<p>Spark 应用在集群上作为独立的进程组来运行，在您的 main 函数中通过 SparkContext 来协调（称之为 driver 程序，可以理解为以前写过的MR程序的Job类中的相关内容）。这里的SparkContext类似于Hadoop中的Job或者Sping中的ApplicationContext。</p>
+<p>具体的说，为了运行在集群上，</p>
+<p>SparkContext 可以连接至几种类型的 Cluster Manager（既可以用 Spark 自己的 Standlone Cluster Manager，或者 Mesos，也可以使用 YARN），</p>
+<p>它们会分配应用的资源。一旦连接上，Spark 获得集群中节点上的 Executor，这些进程可以运行计算并且为您的应用存储数据。</p>
+<p>接下来，它将发送您的应用代码（通过 JAR 或者 Python 文件定义传递给 SparkContext）至 Executor。最终，SparkContext 将发送 Task 到 Executor 以运行。</p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/oeljeklaus-you/SparkCore/master/image/Spark%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.png" alt="执行原理图"></p>
+<table>
+<thead>
+<tr>
+<th>Application</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用户构建在 Spark 上的程序。由集群上的一个 driver 程序和多个 executor 组成。</td>
+</tr>
+<tr>
+<td>Application jar</td>
+</tr>
+<tr>
+<td>一个包含用户 Spark 应用的 Jar。</td>
+</tr>
+<tr>
+<td>Driver program</td>
+</tr>
+<tr>
+<td>该进程运行应用的 main( )  方法并且创建了 SparkContext。</td>
+</tr>
+<tr>
+<td>Cluster manager</td>
+</tr>
+<tr>
+<td>一个外部的用于获取集群上资源的服务。（例如，Standlone Manager，Mesos，YARN）</td>
+</tr>
+<tr>
+<td>Worker node</td>
+</tr>
+<tr>
+<td>任何在集群中可以运行应用代码的节点。</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Executor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一个为了在 worker 节点上的应用而启动的进程，它运行 task 并且将数据保持在内存中或者硬盘存储。每个应用有它自己的 Executor。</td>
+</tr>
+<tr>
+<td>Job</td>
+</tr>
+<tr>
+<td>一个由多个任务组成的并行计算，并且能从 Spark action 中获取响应（例如 save, collect）; 您将在 driver 的日志中看到这个术语。</td>
+</tr>
+<tr>
+<td>Stage</td>
+</tr>
+<tr>
+<td>每个 Job 会被拆分成更小的, 被称作 stage（阶段） 的 task（任务） 组，stage 彼此之间是相互依赖的（与 MapReduce 中的 map 和 reduce stage 相似）。您将在 driver 的日志中看到这个术语。</td>
+</tr>
+<tr>
+<td>Task</td>
+</tr>
+<tr>
+<td>一个将要被发送到 Executor 中的工作单元。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Spark的集群"><a href="#Spark的集群" class="headerlink" title="Spark的集群"></a>Spark的集群</h3><ol>
+<li>Standanlone</li>
+</ol>
+<p>单机版 , 百度搜去</p>
+<p>架构图:</p>
+<p><img src="http://i4.bvimg.com/11835/8936465c7779fb52.png" alt="架构图"></p>
+<ol>
+<li>Spark高可用</li>
+</ol>
+<p>高可用模式 , 是为了解决集群之间单点故障的问题 , 需要借助zookeeper , 并且 至少启动两个 Master , 才可以看到效果 ,</p>
+<ul>
+<li>安装配置zookeeper集群，并启动zookeeper集群；</li>
+<li>停止spark所有服务，修改配置文件spark-env.sh，</li>
+<li>在该配置文件中删掉SPARK_MASTER_IP并添加如下配置，<ul>
+<li>其中zk1,zk2,zk3为zk的hosts列表</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export <span class="type">SPARK_DAEMON_JAVA_OPTS</span>=<span class="string">"-Dspark.deploy.recoveryMode=ZOOKEEPER-</span></span><br><span class="line"><span class="string">Dspark.deploy.zookeeper.url=zk1,zk2,zk3-Dspark.deploy.zookeeper.dir=/spark"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>在node01节点上修改slaves配置文件内容指定worker节点</p>
+</li>
+<li><p>在node01上执行sbin/start-all.sh脚本，然后在node02上执行sbin/start-master.sh启动第二个Master</p>
+</li>
+</ul>
+<ol>
+<li>Spark on Yarn</li>
+</ol>
+<p>Yarn的提交方式:</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"># sh spark-submit \ </span><br><span class="line">--<span class="class"><span class="keyword">class</span> <span class="title">&lt;main-class&gt;</span> <span class="title">\</span></span></span><br><span class="line"><span class="class"><span class="title">--master</span> <span class="title">&lt;master-url&gt;</span> <span class="title">\</span></span></span><br><span class="line"><span class="class"><span class="title">--deploy-mode</span> <span class="title">&lt;deploy-mode&gt;</span> <span class="title">\</span></span></span><br><span class="line"><span class="class"><span class="title">--conf</span> <span class="title">&lt;key&gt;=&lt;value&gt;</span> <span class="title">\</span></span></span><br><span class="line"><span class="class"><span class="title">……</span> <span class="title">其他可用选项</span></span></span><br><span class="line"><span class="class"><span class="title">&lt;jar包名称&gt;</span> <span class="title">\</span></span></span><br><span class="line"><span class="class">[jar包main函数所需参数]</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">/**</span></span></span><br><span class="line"><span class="class"><span class="title">详解如下：</span></span></span><br><span class="line"><span class="class"><span class="title">--class：您的jar包的主Obeject</span></span></span><br><span class="line"><span class="class"><span class="title">--master：群集的主URL，如果是saprk</span> <span class="title">on</span> <span class="title">yarn，我们只需要写yarn即可（因为HADOOP_CONF_DIR我们已经在配置阶段告诉spark了，spark自会去找YARN的URL）</span></span></span><br><span class="line"><span class="class"><span class="title">--deploy-mode：是在工作节点（cluster）上部署驱动程序还是在本地部署外部客户端（client）（默认值</span></span>: client，我们要求使用cluster) </span><br><span class="line">--conf：key = value格式的任意<span class="type">Spark</span>配置属性。对于包含空格的值，在引号中包含“key = value”。</span><br><span class="line">application-jar：应用程序打成的jar包，包括您的应用程序和所有依赖项。<span class="type">URL</span>必须在群集内部全局可见，例如，所有节点上都存在的hdfs:<span class="comment">//路径或本地文件系统file://路径。</span></span><br><span class="line">application-arguments：参数传递给主类的main方法，如果有的话。</span><br><span class="line"></span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line"><span class="comment">/*------Examples--------*/</span></span><br><span class="line"></span><br><span class="line"># sh spark-submit \</span><br><span class="line">  --<span class="class"><span class="keyword">class</span> <span class="title">org</span>.<span class="title">apache</span>.<span class="title">spark</span>.<span class="title">examples</span>.<span class="title">SparkPi</span> <span class="title">\</span></span></span><br><span class="line"><span class="class">  <span class="title">--master</span> <span class="title">yarn</span> <span class="title">\</span></span></span><br><span class="line"><span class="class">  <span class="title">--deploy-mode</span> <span class="title">cluster</span> <span class="title">\</span>  <span class="title">#</span> <span class="title">can</span> <span class="title">be</span> <span class="title">client</span> <span class="title">for</span> <span class="title">client</span> <span class="title">mode</span></span></span><br><span class="line"><span class="class">  <span class="title">--executor-memory</span> 20<span class="title">G</span> <span class="title">\</span></span></span><br><span class="line"><span class="class">  <span class="title">--num-executors</span> 50 <span class="title">\</span></span></span><br><span class="line"><span class="class">  <span class="title">/path/to/examples</span>.<span class="title">jar</span> <span class="title">\</span></span></span><br><span class="line"><span class="class">1000 <span class="title">#计算pi所需的计算因子</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="spark集群启动流程："><a href="#spark集群启动流程：" class="headerlink" title="spark集群启动流程："></a>spark集群启动流程：</h3><pre><code>1、执行start-all.sh，首先启动Master进程
+
+2、找到conf文件下的slaves配置文件，找到相应的Worker节点，启动Worker节点
+
+3、Worker向Master发送注册信息(核心数、内存、所有资源)[默认配置]spark-env.sh中可执行
+
+4、Master收到Worker的注册信息，将其保存到内存和磁盘中，向Worker返回注册成功信息
+
+5、Worker开始和Master建立心跳，Master收到心跳后更新WorkerInfo最后一次心跳时间
+</code></pre><h3 id="Spark提交任务流程："><a href="#Spark提交任务流程：" class="headerlink" title="Spark提交任务流程："></a>Spark提交任务流程：</h3><pre><code>1、Driver端首先启动SparkSubmit进程，启动后开始和Master进行RPC通信(创建了任务提交的入口SparkContext)，接着向Master发送任务信息
+
+2、Master接收到任务消息后，开始资源调度，此时会和所有的Worker进行通信，找到较空闲的Worker，并通知Worker来拿取任务并启动相应的Executor
+
+3、Executor启动后，开始和Driver进行反向注册，接下来Driver端开始把任务发送给相应的Executor，Executor开始计算任务
+</code></pre><h3 id="Spark任务执行流程"><a href="#Spark任务执行流程" class="headerlink" title="Spark任务执行流程"></a>Spark任务执行流程</h3><p><img src="http://i4.bvimg.com/11835/8797ab583b68fc05.png" alt="执行流程"></p>
+<ol>
+<li>Spark 客户端 向Yarn提交应用时, 启动 client 向 RM提交应用程序 , 包括启动 AppMaster 命令 &amp; 提交 Master 的应用程序, 和 在 Excutor 中运行的程序.</li>
+<li>RM 接收到请求之后, 在集群中选择 NM , 为该应用分配一个 continer 容器, 并且在这个容器中 启动此应用的Master, AppMaster 负责 SparkContext 的初始化工作</li>
+<li>AppMaster 向 RM 进行zhuce, 用户可以通过RM来查看当前程序所运行的状态 , 之后将采用轮询的方式,为每一个任务去申请资源, 并且监控任务状态 , 直到程序终止</li>
+<li>一旦 AppMaster 申请到 Container 之后 , 与相对应的 NM 进行通信, 要求它在获得的Container启动 ==CoarseGrainedExecutorBackend==( CGEB ) , CGEB 在启动后 向AppMaster 进行SparkContext的注册 .</li>
+<li>等待 Executor 中的 Task 任务完成</li>
+</ol>
+<h4 id="注意点："><a href="#注意点：" class="headerlink" title="注意点："></a>注意点：</h4><p>·Driver如何获知Master的位置？</p>
+<pre><code>当你执行spark-submit上传任务的时候(--master)，此时命令中包含了Master的地址，以及还有内存核数等信息(如果你不配置的话则是默认)
+</code></pre><p>· 当Master收到申请资源的请求时，尽可能地将任务运行在更多地机器上，方便执行速度更快</p>
+<p>· Driver端只负责spark应用程序任务的调度，所以任务是在Driver端生成，发送到Executor中去执行业务逻辑，可以执行多个任务</p>
+<hr>
+<h2 id="SparkCore中的三大概念"><a href="#SparkCore中的三大概念" class="headerlink" title="SparkCore中的三大概念"></a>SparkCore中的三大概念</h2><ul>
+<li><a href="http://spark.apache.org/docs/latest/rdd-programming-guide.html" target="_blank" rel="noopener">RDD</a> ( 弹性分布式的数据集 ) [  ==<em>Resilient Distributed Dataset</em>==  ]</li>
+</ul>
+<p>Spark revolves around the concept of a <em>resilient distributed dataset</em> (RDD), </p>
+<p>which is a fault-tolerant collection of elements that can be operated on in parallel. </p>
+<p>​    There are two ways to create RDDs: </p>
+<p><em>parallelizing</em> an existing collection in your driver program, </p>
+<p>or referencing a dataset in an external storage system, </p>
+<p>such as a shared filesystem, HDFS, HBase, or any data source offering a Hadoop InputFormat.</p>
+<blockquote>
+<p>Spark围绕<em>弹性分布式数据集</em>（RDD）的概念展开，</p>
+<p>RDD是一个可以并行操作的容错的容错集合。</p>
+<p>​    创建RDD有两种方法：</p>
+<p><em>并行化</em> 驱动程序中的现有集合，<code>parallelize</code>  <code>makeRDD</code></p>
+<p>或引用外部存储系统中的数据集，<code>fromFile</code></p>
+<p>(例如共享文件系统，HDFS，HBase或提供Hadoop InputFormat的任何数据源。)</p>
+</blockquote>
+<ul>
+<li>Transformations ( 转换 ) ==Lazy==</li>
+</ul>
+<blockquote>
+<p>​      转换发生在 将一个现有的RDD转换成其他RDD的时候 , 只有等待有Action操作时,才触发</p>
+<p>比如当你打开一个文件, 读取后通过map方法</p>
+<p>​     将字符串类型RDD转换成另外一个数组类型RDD就是一种转换操作</p>
+<p>常用的转换操作有map,filer,flatMap,union,distinct,groupByKey等。</p>
+</blockquote>
+<ul>
+<li>Actions  ( 动作操作 )</li>
+</ul>
+<blockquote>
+<p>动作发生  —-&gt;  当在你需要系统返回一个结果的时候 , 触发 Spark 提交job任务,运行runjob方法,将数据输出到spark系统中</p>
+<p>比如你需要知道RDD的第一行数据是什么样的内容</p>
+<p>常用的动作操作有  reduce,collect,count,first,take(),saveAsTextFile(),foreach()  等。</p>
+</blockquote>
+<p>在Spark中它使用的是 “ lazy evaluation “  :</p>
+<p>​    这样意味着, 任何 Transformation 的操作 实际上并没有发生任何的操作</p>
+<p>​    直到 遇见 Action 操作的时候 Spark 才开始真正的从头运行程序, 执行一些列的Transformation操作</p>
+<p>┏┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┓</p>
+<p>┃ 因为有了这种 ==” lazy evaluation “ ( 惰性求值 )== 的特性 , 加上 ==RDD的”血缘”依赖==导致 在连续的运算的时候形成了┃</p>
+<p>┃ ==DAG（Directed Acyclic Graph）[ 有向无环图 ]== 这种DAG可以优化整个执行计划                              ┃ </p>
+<p>┗┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┛</p>
+<hr>
+<h3 id="RDD-弹性的分布式数据集"><a href="#RDD-弹性的分布式数据集" class="headerlink" title="RDD(弹性的分布式数据集)"></a>RDD(弹性的分布式数据集)</h3><p>​    <a href="https://blog.csdn.net/gamer_gyt/article/details/51747783" target="_blank" rel="noopener">Pair RDD</a></p>
+<p>​    <strong>RDD</strong>是 <strong>[  Resilient Distribute Datasets  ]</strong> 的简称，中文意思为“弹性分布式数据集”，</p>
+<p>​    RDD实质上是存储在不同节点计算机中的数据集。分布式存储最大的好处是可以让数据在不同的工作节点上并行存储（内存或硬盘），以便在需要数据的时候并行运算，从而获得较高的效率。</p>
+<p>​    RDD从程序的角度来说是一个scala的抽象类，具体由各子类实现，如MappedRDD、ShuffledRDD等子类。Spark将常用的大数据操作都转换成为RDD的子类。</p>
+<hr>
+<ul>
+<li><p>RDD弹性的含义</p>
+<ol>
+<li>自动进行内存和磁盘存储的切换</li>
+</ol>
+<p>Spark优先将数据放到内存中,如果内存放不下, 就会被放到磁盘中, 程序进行自动的存储切换</p>
+<ol start="2">
+<li>基于血统的高容错机制 ( 依赖 )</li>
+</ol>
+<p>RDD进行转换或者动作时 , 会形成 RDD 的依赖链 , 当RDD失效时 , 可以计算上游的RDD重新计算丢失的RDD数据</p>
+<ol start="3">
+<li>==Stage / Task==失败后自动进行特定次数的重试</li>
+</ol>
+<p>RDD的计算任务如果运行失败 , 会自动进行任务的重新计算, 默认为次数为4</p>
+<ol start="4">
+<li><p>CheckPoint 和 Persist 可以主动,被动的触发</p>
+<p>RDD可以通过persist持久化到内存  / 磁盘中, 再次用到此RDD时 , 直接读取即可 , 也可设为检查点 , 检查点会将数据存储在HDFS上, 该RDD的所有父RDD依赖都会被移除</p>
+</li>
+<li><p>数据调度弹性</p>
+</li>
+</ol>
+<p>spark 将这个Job执行模型, 抽象为 有向无环图 ( DAG )  , 将多个Stage任务进行并行, 调度引擎自动处理 stage/task的失败</p>
+<ol start="6">
+<li>数据分片的高度弹性</li>
+</ol>
+<p>可以根据业务调整, 动态调整数据分片的个数, 提升整体的应用执行效率</p>
+<hr>
+</li>
+<li><p>RDD的创建方式</p>
+<ol>
+<li>从外部存储系统中获取</li>
+<li>从父RDD转换得到一个新的RDD</li>
+<li>调用SparkContext 的 parallelize 和 makeRDD 方法 , 将Driver上的数据集并行化, 转化为分布式RDD</li>
+<li>更改RDD的持久性 , 例如cache函数, 默认RDD 计算后被清除, 通过cache 函数将计算后的RDD缓存在内存中</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/***从Driver程序数据集生成RDD***/</span></span><br><span class="line"><span class="keyword">val</span> data = <span class="type">Seq</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)/<span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)/<span class="type">Array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)</span><br><span class="line"><span class="keyword">val</span> rdd1 = sc.parallelize(data,[partition_Num])</span><br><span class="line"><span class="comment">//partition_Num 如果不指定,系统会使用默认设置的</span></span><br><span class="line"><span class="comment">//默认配置项 spark.default.parallelism 决定 , 本地模式下默认使用 CPU 的核数数量</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/***从外部获取生成RDD***/</span></span><br><span class="line"><span class="keyword">val</span> file = sc.textFile(<span class="string">"README.md"</span>)</span><br><span class="line"><span class="comment">//textFile 也可以指定分区的数量, 比如 HDFS 默认数据块大小128M , 创建一个分区</span></span><br><span class="line"><span class="comment">//可以指定更多的分区数量,但不能减少</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>RDD的操作类型<ol>
+<li>Transformation ( Lazy模式 ( 懒洋洋的 ) )</li>
+<li>Action——————–这两种都在上面有解释—————–</li>
+<li>缓存</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h4 id="RDD的依赖关系"><a href="#RDD的依赖关系" class="headerlink" title="RDD的依赖关系"></a>RDD的依赖关系</h4><p>怎样产生的依赖关系 :</p>
+<p>​    由于RDD是粗粒度的操作数据集 ,  每个Transformation 操作都会生成一个新的RDD ,  所有RDD之间就会产生类似于流水线的前后依赖关系 , 在spark中, RDD 存在两种依赖关系 ,  </p>
+<p><code>宽依赖 (Wide Dependency)</code> <code>窄依赖 (Narrow Dependency)</code></p>
+<p>什么是依赖关系 : </p>
+<p>宽依赖 : 指的是一个父RDD 的Partition 会被多个子RDD 的Partition所使用    &gt;&gt;&gt;例如 :  groupByKey , reduceByKey …..</p>
+<p>窄依赖 : 指的是每个父RDD 的一个 partition 最多只被一个子RDD 的partition所使用   &gt;&gt;&gt; 例如 : map , filter…</p>
+<blockquote>
+<p><strong>需要特别说明的是对==join==操作有两种情况</strong>：</p>
+<p>如果两个RDD在进行join操作时，一个RDD的partition仅仅和另一个RDD中已知个数的Partition进行join，</p>
+<p>那么这种类型的join操作就是窄依赖，</p>
+<p>例如图1中左半部分的join操作(join with inputs co-partitioned)；</p>
+<p>其它情况的join操作就是宽依赖,</p>
+<p>例如图1中右半部分的join操作(join with inputs not co-partitioned)，</p>
+<p>由于是需要父RDD的所有partition进行join的转换，这就涉及到了shuffle，因此这种类型的join操作也是宽依赖。</p>
+</blockquote>
+<p><img src="https://images2015.cnblogs.com/blog/855959/201610/855959-20161009115627506-271998705.png" alt="依赖图"></p>
+<h5 id="Stage-的划分依据"><a href="#Stage-的划分依据" class="headerlink" title="Stage 的划分依据"></a>Stage 的划分依据</h5><ul>
+<li>划分依据  :</li>
+</ul>
+<p><code>task</code> <code>stage</code> <code>job</code></p>
+<ol>
+<li><p>Spark Application中可以因为不同的Action触发众多的job，一个Application中可以有很多的job，每个job是由一个或者多个Stage构成的，后面的Stage依赖于前面的Stage，也就是说只有前面依赖的Stage计算完毕后，后面的Stage才会运行。</p>
+</li>
+<li><p>Stage划分的依据就是宽依赖，何时产生宽依赖，例如reduceByKey,groupByKey的算子，会导致宽依赖的产生。</p>
+</li>
+<li><p>由Action（例如collect）导致了SparkContext.runJob的执行，最终导致了DAGScheduler中的submitJob的执行，其核心是通过发送一个case class JobSubmitted对象给eventProcessLoop。 </p>
+<blockquote>
+<p>eventProcessLoop是DAGSchedulerEventProcessLoop的具体实例，而DAGSchedulerEventProcessLoop是eventLoop的子类，具体实现EventLoop的onReceive方法，onReceive方法转过来回调doOnReceive </p>
+</blockquote>
+</li>
+<li><p>在doOnReceive中通过模式匹配的方法把执行路由到</p>
+</li>
+<li><p>在handleJobSubmitted中首先创建finalStage，创建finalStage时候会建立父Stage的依赖链条</p>
+</li>
+</ol>
+<p><img src="https://images2015.cnblogs.com/blog/855959/201610/855959-20161009115917862-1919710551.png" alt="stage"></p>
+<p><img src="https://images2015.cnblogs.com/blog/855959/201610/855959-20161009120124230-1553441050.png" alt="补充"></p>
+<p>可以简单点说：介绍什么是RDD中的宽窄依赖 :  </p>
+<p>​    根据DAG有向无环图进行划分，从当前job的最后一个算子往前推，遇到宽依赖，那么当前在这个批次中的所有算子操作都划分成一个stage,遇到窄依赖，就将这个RDD加入该stage中</p>
+<p>​    然后继续按照这种方式在继续往前推，如在遇到宽依赖，又划分成一个stage,一直到最前面的一个算子。最后整个job会被划分成多个stage,而stage之间又存在依赖关系，后面的stage依赖于前面的stage。</p>
+<hr>
+<h3 id="Spark-Core操作"><a href="#Spark-Core操作" class="headerlink" title="Spark Core操作"></a>Spark Core操作</h3><h4 id="共享变量"><a href="#共享变量" class="headerlink" title="共享变量"></a>共享变量</h4><h5 id="广播变量-broadcast"><a href="#广播变量-broadcast" class="headerlink" title="广播变量( broadcast)"></a>广播变量( broadcast)</h5><ol>
+<li>不能将RDD广播出去 , 广播出去的是RDD的处理结果</li>
+<li>广播变量只能在Driver端定义, 在Executor端中使用, 不能再Executor中改变</li>
+<li>不使用广播变量 , 在一个executor中存在多个task , 就有多少个Driver端的副本, </li>
+<li>使用广播变量 , 在每个executor 中只有一个Driver的变量副本</li>
+</ol>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> list = <span class="type">List</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>)      <span class="comment">//需要广播的数据</span></span><br><span class="line"><span class="keyword">val</span> info = sc.broadcast(list)   <span class="comment">//将数据广播出去</span></span><br><span class="line"><span class="keyword">val</span> res = info.value		   <span class="comment">//获取广播变量值</span></span><br></pre></td></tr></table></figure>
+<h5 id="累加器-Accumulator"><a href="#累加器-Accumulator" class="headerlink" title="累加器( Accumulator )"></a>累加器( Accumulator )</h5><p>用于多节点对一个变量进行共享操作 , 其实就是提供了多个Task对一个变量进行操作的过程, task 只能对 accumulator做累加的操作 ,  不能读取其值 , 只有Driver可以读取值 ; 累加器可以看作静态全局变量</p>
+<ol>
+<li>能够准确的统计数据的各种数据例如:<ul>
+<li>可以统计出符合userID的记录数在同一个时间段内产生了多少次购买,</li>
+</ul>
+</li>
+<li>作为调试工具,能够观察每个task的信息<ul>
+<li>通过累加器可以在sparkIUI观察到每个task所处理的记录数.</li>
+</ul>
+</li>
+</ol>
+<p><img src="http://upload-images.jianshu.io/upload_images/1832028-dc92297e1cbc8533?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Spark累加器"></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">ContomizdAccumulator</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">main</span> </span>(args:<span class="type">Array</span>[<span class="type">String</span>]) = &#123;</span><br><span class="line">        <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setAppName(<span class="string">"自定义累加器"</span>).setMaster(<span class="string">"local[*]"</span>)</span><br><span class="line">        <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line">        <span class="keyword">val</span> accumulator = <span class="keyword">new</span> <span class="type">MyAccumulator</span>()</span><br><span class="line">        sc.register(accumulator)</span><br><span class="line">        <span class="keyword">val</span> numRDD = sc.parallelize(<span class="type">Array</span>(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>))</span><br><span class="line">        <span class="keyword">val</span> resSum = numRDD.filter(line=&gt;&#123;</span><br><span class="line">            <span class="keyword">val</span> pattern = <span class="string">""</span><span class="string">"^-?(\d+)"</span><span class="string">""</span>  <span class="comment">//正则</span></span><br><span class="line">            <span class="keyword">val</span> flag = line.matches(pattern)</span><br><span class="line">            <span class="keyword">if</span>(!flag)&#123;</span><br><span class="line">              accumulator.add(line)</span><br><span class="line">            &#125;</span><br><span class="line">            flag</span><br><span class="line">           &#125;).map(_.toInt).reduce(_+_)</span><br><span class="line">        print(<span class="string">"result = "</span> + resSum)</span><br><span class="line">        sc.stop</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util._</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyAccumulator</span> <span class="keyword">extends</span> <span class="title">AccumulatorV2</span>[<span class="type">String</span>,<span class="type">Set</span>[<span class="type">String</span>]]</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> accnum = <span class="keyword">new</span> <span class="type">HashSet</span>[<span class="type">String</span>]()</span><br><span class="line">    <span class="comment">//判断是否为空 ( 累加器是否为 0 )</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">isZero</span> </span>= set.isEmpty</span><br><span class="line">    <span class="comment">//进行拷贝数据 , 累加器的复制操作,</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">copy</span></span>():<span class="type">AccumulatorV2</span>[<span class="type">String</span>,<span class="type">Set</span>[<span class="type">String</span>]] = &#123;</span><br><span class="line">        <span class="keyword">val</span> newAcc = <span class="keyword">new</span> <span class="type">MyAccumulator</span>()</span><br><span class="line">        <span class="comment">//考虑线程安全</span></span><br><span class="line">        set.synchronized&#123;</span><br><span class="line">            newAcc.accnum.addAll(<span class="keyword">this</span>.accum)</span><br><span class="line">        &#125;</span><br><span class="line">        newAcc</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//进行结果的初始化  , 清零操作</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">reset</span></span>() = accnum.clear()</span><br><span class="line">    <span class="comment">//实现在每一个task中,进行累加, 将传入的值累加到累加器上</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">add</span></span>(v:<span class="type">String</span>) = accnum.add(v)</span><br><span class="line">    <span class="comment">//进行归并操作</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">merge</span></span>(other:<span class="type">AccumulatorV2</span>[<span class="type">String</span>,<span class="type">Set</span>[<span class="type">String</span>]]) = </span><br><span class="line">        other <span class="keyword">match</span> &#123;</span><br><span class="line">            <span class="keyword">case</span> o : <span class="type">MyAccumulator</span> =&gt; accnum.addAll(o.value)</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//获得累加器的值</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">value</span> </span>= accnum</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用Accumulator时，为了保证准确性，只使用一次action操作。如果需要使用多次则使用cache或persist操作切断依赖。</p>
+<hr>
+<p> <strong>累加器与广播变量比较</strong></p>
+<p><code>累加器</code>是在Driver端创建，在Driver端读取，在Executor端操作(累加操作)，在Executor端是不能读取的。</p>
+<p><code>广播变量</code>是在Driver端创建，在Executor端读取，在Executor端不能修改。</p>
+<p> <strong>利用累加器算文件的行数</strong></p>
+<p><strong>[代码演示]</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestAccumulator</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SparkConf conf = <span class="keyword">new</span> SparkConf()</span><br><span class="line">                .setAppName(<span class="string">"BroadCast"</span>)</span><br><span class="line">                .setMaster(<span class="string">"local"</span>)</span><br><span class="line">                .set(<span class="string">"spark.testing.memory"</span>, <span class="string">"2147480000"</span>);</span><br><span class="line">       JavaSparkContext sc = <span class="keyword">new</span> JavaSparkContext(conf);	</span><br><span class="line">        <span class="keyword">final</span> Accumulator&lt;Integer&gt; accumulator = sc.accumulator(<span class="number">0</span>);	</span><br><span class="line">        JavaRDD&lt;String&gt; userLogRDD = sc.textFile(<span class="string">"cs"</span>);	</span><br><span class="line">        userLogRDD.foreach(<span class="keyword">new</span> VoidFunction&lt;String&gt;() &#123;	</span><br><span class="line">            <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1L</span>;	</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">call</span><span class="params">(String s)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">                accumulator.add(<span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        System.out.println(<span class="string">"line count:"</span> + accumulator.value());</span><br><span class="line">        sc.stop();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> <strong>累加器的错误用法</strong></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> accum= sc.accumulator(<span class="number">0</span>, <span class="string">"Error Accumulator"</span>)</span><br><span class="line"><span class="keyword">val</span> data = sc.parallelize(<span class="number">1</span> to <span class="number">10</span>)	</span><br><span class="line"><span class="comment">//用accumulator统计偶数出现的次数，同时偶数返回0，奇数返回1	</span></span><br><span class="line"><span class="keyword">val</span> newData = data.map&#123;x =&gt; &#123;	</span><br><span class="line"><span class="keyword">if</span>(x%<span class="number">2</span> == <span class="number">0</span>)&#123;	</span><br><span class="line">accum += <span class="number">1</span>	</span><br><span class="line"><span class="number">0</span>	</span><br><span class="line">&#125;<span class="keyword">else</span> <span class="number">1</span>	</span><br><span class="line">&#125;&#125;	</span><br><span class="line"><span class="comment">//使用action操作触发执行	</span></span><br><span class="line">newData.count	</span><br><span class="line"><span class="comment">//此时accum的值为5，是我们要的结果	</span></span><br><span class="line">accum.value	</span><br><span class="line"><span class="comment">//继续操作，查看刚才变动的数据,foreach也是action操作	</span></span><br><span class="line">newData.foreach(println)	</span><br><span class="line"><span class="comment">//上个步骤没有进行累计器操作，可是累加器此时的结果已经是10了	</span></span><br><span class="line"><span class="comment">//这并不是我们想要的结果</span></span><br><span class="line">accum.value</span><br></pre></td></tr></table></figure>
+<p>  <img src="http://i2.bvimg.com/11835/44e7cd31050b3fa7.png" alt="原因分析"></p>
+<p><img src="http://i2.bvimg.com/11835/3800fff4b5796f32.png" alt="解决方案"></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> accum= sc.accumulator(<span class="number">0</span>, <span class="string">"Error Accumulator"</span>)</span><br><span class="line"><span class="keyword">val</span> data = sc.parallelize(<span class="number">1</span> to <span class="number">10</span>)</span><br><span class="line"><span class="comment">//代码和上方相同</span></span><br><span class="line"><span class="keyword">val</span> newData = data.map&#123;x =&gt; &#123;...&#125;&#125;</span><br><span class="line"><span class="comment">//使用cache缓存数据，切断依赖。</span></span><br><span class="line">newData.cache.count</span><br><span class="line"><span class="comment">//此时accum的值为5</span></span><br><span class="line">accum.value</span><br><span class="line">newData.foreach(println)</span><br><span class="line"><span class="comment">//此时的accum依旧是5</span></span><br><span class="line">accum.value</span><br></pre></td></tr></table></figure>
+<h4 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h4><ul>
+<li><p>自定义分区</p>
+<p>自定义分区需要继承 Partitioner , 重写 getPartitions 和 numPartitions 方法</p>
+</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">//自定义分区规则</span></span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">MyPartition</span> <span class="keyword">extends</span> <span class="title">org</span>.<span class="title">apache</span>.<span class="title">spark</span>.<span class="title">Partitioner</span> </span>&#123;</span><br><span class="line">    <span class="comment">//重写Partitioner 中的 numPartitions方法, 返回分区的个数</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">numPartitions</span></span>: <span class="type">Int</span> = outPartitionNumber</span><br><span class="line">    <span class="comment">//重写Partitioner中的getPartition方法, 返回某个 K,V 对所属的分区</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">getPartition</span></span>(key: <span class="type">Any</span>): <span class="type">Int</span> = &#123;</span><br><span class="line">        <span class="comment">/*-------------------------------分区逻辑---------------------------------*/</span></span><br><span class="line">      <span class="keyword">val</span> keyInt = <span class="type">Integer</span>.parseInt(key.toString)</span><br><span class="line">      <span class="comment">//元素在开头分区</span></span><br><span class="line">      <span class="keyword">if</span>(keyInt &lt; sampleMinValue)&#123;</span><br><span class="line">        <span class="number">0</span></span><br><span class="line">      &#125;<span class="keyword">else</span> <span class="keyword">if</span>(keyInt &gt; sampleMaxValue)&#123;</span><br><span class="line">        <span class="comment">//元素在结尾分区</span></span><br><span class="line">        numPartitions - <span class="number">1</span></span><br><span class="line">      &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//如果不在开头分区和结尾分区,则计算此元素所属的分区</span></span><br><span class="line">        <span class="keyword">var</span> partitionNumber = (keyInt - sampleMinValue + <span class="number">1</span>) / partitionSpace + <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span>(keyInt % partitionNumber != <span class="number">0</span>)&#123;</span><br><span class="line">          partitionNumber += <span class="number">1</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//partition编号从0开始, 所以需要-1</span></span><br><span class="line">        partitionNumber - <span class="number">1</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="CheckPoint-amp-amp-Cache"><a href="#CheckPoint-amp-amp-Cache" class="headerlink" title="CheckPoint &amp;&amp; Cache"></a>CheckPoint &amp;&amp; Cache</h3><h4 id="CheckPoint"><a href="#CheckPoint" class="headerlink" title="CheckPoint"></a><a href="https://blog.csdn.net/qq_20641565/article/details/76223002" target="_blank" rel="noopener">CheckPoint</a></h4><blockquote>
+<p>checkpoint的意思就是建立检查点,类似于快照,</p>
+<p>例如在spark计算里面 计算流程DAG特别长,服务器需要将整个DAG计算完成得出结果,但是如果在这很长的计算流程中突然中间算出的数据丢失了,</p>
+<p>spark又会根据RDD的依赖关系从头到尾计算一遍,这样子就很费性能,当然我们可以将中间的计算结果通过cache或者persist放到内存或者磁盘中,</p>
+<p>但是这样也不能保证数据完全不会丢失,存储的这个内存出问题了或者磁盘坏了,也会导致spark从头再根据RDD计算一遍,</p>
+<p>所以就有了checkpoint,其中checkpoint的作用就是将DAG中比较重要的中间数据做一个检查点将结果存储到一个高可用的地方(通常这个地方就是HDFS里面)</p>
+</blockquote>
+<p>SparkContext 如何建立检查点 :</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> data = sc.textFile(“/tmp/spark/<span class="number">1.</span>data”).cache()</span><br><span class="line">sc.setCheckpointDir(<span class="string">"/tmp/spark/checkpoint"</span>)</span><br><span class="line">data.checkpoint</span><br><span class="line">data.count</span><br></pre></td></tr></table></figure>
+<h4 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h4><ul>
+<li>什么时候需要进行缓存 : </li>
+</ul>
+<blockquote>
+<ol>
+<li>当重复利用RDD时 , 会添加缓存 ,</li>
+<li>当后面的多个指标, 需要用到此RDD  需要缓存</li>
+<li>Shuffle 后的结果 , 有可能需要进行缓存</li>
+<li>如果计算业务逻辑比较复杂, 那么将结果进行缓存, 下次运行岂不是更快?</li>
+</ol>
+</blockquote>
+<ul>
+<li>如何进行缓存:</li>
+</ul>
+<p><code>persist( )</code></p>
+<p>可以手动指定持久化级别 </p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">persist (<span class="type">StorageLevel</span>.<span class="type">MEMORY_ONLY</span>)   ==  cache()  ==  persist()</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>常用持久化级别 :</p>
+<ol>
+<li>MEMORY_ONLY                         —–-内存缓存</li>
+<li>MEMORY_ONLY_SER                —–-将每个分区缓存为数组</li>
+<li>MEMORY_AND_DISK                 –—-放入内存，内存不足时，存放到磁盘中</li>
+<li>MEMORY_AND_DISK_SER        –––进行序列化存储，超出部分写入磁盘中</li>
+</ol>
+</blockquote>
+<p>该方法等同于cache方法  , 但是 persist( ) 的表达更加广泛, 可以通过参数设置持久化到内存或者硬盘</p>
+<p>​    但是无论哪种都是持久化 , 然而cache只是局限于持久化到内存汇总</p>
+<p><code>cache( )</code></p>
+<p>默认将RDD中的数保存在内存中 , 属于Lazy操作, 需要Action算子进行触发</p>
+<p><code>unpersist( true )</code></p>
+<p>删除缓存中的数据，将释放缓存，从缓存中去掉</p>
+<h3 id="RDD的常见算子操作"><a href="#RDD的常见算子操作" class="headerlink" title="RDD的常见算子操作"></a>RDD的常见算子操作</h3><ul>
+<li>Transformation</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">flatMap(function)</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        map是对RDD中的元素进行函数操作映射为另一个RDD</span></span><br><span class="line"><span class="comment">          flatMap 操作是将函数应用于RDD中每一个元素,将返回的迭代器的所有内容构成RDD</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">mapPartitions(function)</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        mapPartitions应用于所有分区。</span></span><br><span class="line"><span class="comment">        如parallelize（1 to 10， 3），map函数执行10次，而mapPartitions函数执行3次。</span></span><br><span class="line"><span class="comment">        可以获取返回值, 由于单独运行在RDD的每个分区上,所以在一个类型为T的RDD上运行</span></span><br><span class="line"><span class="comment">        函数必须是Iterator&lt;T&gt; =&gt; Iterator&lt;U&gt;</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">mapPartitionsWithIndex(function)</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        与上面类似, 但是需要提供分区的索引值作为参数.</span></span><br><span class="line"><span class="comment">        但函数必须是 （int， Iterator&lt;T&gt;）=&gt;Iterator&lt;U&gt;</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">sample(withReplacement， fraction， seed）</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        采样操作:</span></span><br><span class="line"><span class="comment">          withReplacement: 是否放回</span></span><br><span class="line"><span class="comment">          fraction : 采样比例</span></span><br><span class="line"><span class="comment">          seed : 指定随机数生成器种子</span></span><br><span class="line"><span class="comment">    ( 是否放回抽样分true和false，fraction取样比例为(0, 1]。seed种子为整型实数。）</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">union（otherDataSet）</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        对于源数据集和其他数据集求并集，不去重。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">groupByKey()</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">        主要作用是将相同的所有的键值对分组到一个集合序列当中，其顺序是不确定的。</span></span><br><span class="line"><span class="comment">        groupByKey是把所有的键值对集合都加载到内存中存储计算，</span></span><br><span class="line"><span class="comment">        若一个键对应值太多，则易导致内存溢出。</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">reduceByKey()</span><br><span class="line">     <span class="comment">/*</span></span><br><span class="line"><span class="comment">     	如(a,1), (a,2), (b,1), (b,2)。</span></span><br><span class="line"><span class="comment">     	groupByKey = ( (a,1), (a,2) ), ( (b,1), (b,2) )</span></span><br><span class="line"><span class="comment">     	reduceByKey = (a,3), (b,3)</span></span><br><span class="line"><span class="comment">     	</span></span><br><span class="line"><span class="comment">		reduceByKey主要作用是聚合</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">aggregateByKey（zeroValue）（seqOp， combOp， [numTasks]）</span><br><span class="line">       <span class="comment">/*</span></span><br><span class="line"><span class="comment">       	类似reduceByKey，对pairRDD中想用的key值进行聚合操作，存在初始值</span></span><br><span class="line"><span class="comment">       	  对应返回值为pairRDD</span></span><br><span class="line"><span class="comment">       */</span></span><br><span class="line">sortByKey（[ascending], [numTasks]）       </span><br><span class="line">       <span class="comment">/*</span></span><br><span class="line"><span class="comment">       	同样是基于pairRDD的，根据key值来进行排序。ascending升序，默认为true，即升序</span></span><br><span class="line"><span class="comment">       */</span></span><br><span class="line">cartesian（otherDataSet）</span><br><span class="line">       <span class="comment">/*</span></span><br><span class="line"><span class="comment">       求笛卡尔乘积。该操作不会执行shuffle操作。   </span></span><br><span class="line"><span class="comment">       */</span></span><br><span class="line">repartition（numPartitions）    </span><br><span class="line">       <span class="comment">/*</span></span><br><span class="line"><span class="comment">       	进行重新分区 , 会造成shuffle操作</span></span><br><span class="line"><span class="comment">       */</span></span><br><span class="line">repartitionAndSortWithinPartitions（partitioner）</span><br><span class="line">       <span class="comment">/*</span></span><br><span class="line"><span class="comment">       	该方法根据partitioner对RDD进行重新分区，并且在每个结果分区中按key进行排序。</span></span><br><span class="line"><span class="comment">       */</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Action</li>
+</ul>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">collect()</span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">			将一个RDD 返回以一个Array数组形式,并返回其中的所有元素</span></span><br><span class="line"><span class="comment">		*/</span></span><br><span class="line">takeOrdered(n,[排序规则])</span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">			返回RDD中 n  个元素,并且默认升序进行排序 or 自定义顺序</span></span><br><span class="line"><span class="comment">		*/</span></span><br><span class="line">saveAsTextFile（path）</span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">			将文件以文本文件的形式进行存储 ;</span></span><br><span class="line"><span class="comment">			若文件存储在本地系统中,那么会保存在executor所在机器的目录上</span></span><br><span class="line"><span class="comment">		*/</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://i2.bvimg.com/11835/db3ba1bcc096131a.png" alt="mapPartitionsWithIndex"></p>
+<h3 id="好多算子的对比"><a href="#好多算子的对比" class="headerlink" title="好多算子的对比"></a>好多算子的对比</h3><ul>
+<li>比较 reduceByKey 、groupByKey 、aggregateByKey 、foldByKey</li>
+</ul>
+<blockquote>
+<p>reduceByKey : 合并具有相同key的value值 , 可以传入自定义函数，而groupByKey不可以，最重要的是它能够在本地先进性merge操作 , 并且merge 的操作可以通过函数自定义来实现 . </p>
+<p>在进行复杂计算时，reduceByKey的性能优于groupByKey . </p>
+<p>groupByKey : 是对每个key进行操作，但只生成一个sequence。groupByKey不能自定义函数，我们需要先用groupByKey生成RDD，然后才能对此RDD通过map进行自定义函数操作。</p>
+<p>​    groupByKey()是对RDD中的所有数据做shuffle,根据不同的Key映射到不同的partition中再进行aggregate。</p>
+<p>aggregateByKey() : 是先对每个partition中的数据根据不同的Key进行aggregate，然后将结果进行shuffle，完成各个partition之间的aggregate。因此，和groupByKey()相比，运算量小了很多。</p>
+<p><a href="http://www.mamicode.com/info-detail-1458866.html" target="_blank" rel="noopener">foldByKey</a>: 通过调用CombineByKey函数实现的 , 将RDD[K,V]根据K将V做折叠、合并处理，zeroValue作为初始参数，调用func得到V，再根据Key按照func对V进行调用。</p>
+</blockquote>
+<ul>
+<li>比较 mapPartitions 、mapPartitionWithIndex</li>
+</ul>
+<blockquote>
+<p>mapPartitions : 类似于map函数 , 该函数先对RDD进行分区操作 , 再将分区中的数据进行map操作</p>
+</blockquote>
+<blockquote>
+<p>mapPartitionsWithIndex  :相比于mapPartitions多了一个index索引，每次调用时就会把分区的“编号”穿进去</p>
+</blockquote>
+<p>在Spark中, 最基本的原则就是,每个task处理一个RDD的partition ,  所以在此基础之上</p>
+<p>mapPartitions的优点就是比map的效率高 : 如果普通的map , 比如一个partition中存在 1w 条数据, 那么你的Function需要执行和计算 1w 次 , 但是使用mapPartitions之后, 一个task 会执行一次function , 一次性的接受patition中的数据,因为只需要执行一次, 性能比较高</p>
+<p>缺点 : 可能会造成OOM </p>
+<p>​    普通map , 一个function执行就是处理一条数据, 那么内存不够的情况下会调用GC , 或者其他方法腾出空间</p>
+<p>​    mapPartitions 会一次性读取.数据量大的时候,内存占满了,会出现OOM , </p>
+<blockquote>
+<p>在项目中, 自己去估算RDD的数据量, 以及每个Partition的数据量, 还有分给Executor的内存资源, 能否容得下partition的数据量 , 如果能够跑通的话,  那么效率势必会比 Map高</p>
+</blockquote>
+<ul>
+<li>比较 flatMap 、map  </li>
+</ul>
+<p>话不多说上代码</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化数据</span></span><br><span class="line"><span class="keyword">val</span> rdd1 = sc.parallelize(<span class="type">Array</span>(<span class="string">"hello world"</span>,<span class="string">"i love you"</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment">// map</span></span><br><span class="line"><span class="keyword">val</span> res = rdd1.map(_.split(<span class="string">" "</span>)).collect</span><br><span class="line"><span class="type">Array</span>(<span class="type">Array</span>(hello, world), <span class="type">Array</span>(i, love, you))</span><br><span class="line"></span><br><span class="line"><span class="comment">// flatMap  效率高</span></span><br><span class="line"><span class="keyword">val</span> res = rdd1.flatMap(_.split(<span class="string">" "</span>)).collect</span><br><span class="line"><span class="type">Array</span>(hello, world, i, love, you)</span><br><span class="line"><span class="comment">//flatMap是将数据先进行map转化，在通过flattern对map结果进行’压平’。也就是将map转化的2个Array压平处理。</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>比较 map  、foreach</li>
+<li>比较 foreach 、foreachRDD 、foreachPartition</li>
+</ul>
+<p>foreach : 在数据集的每一个元素上, 运行函数进行更新展示</p>
+<ul>
+<li>比较 union 、distinct、intersection</li>
+<li>比较 zip 、zipPartitions</li>
+</ul>
+<h2 id="Spark-Shuffle"><a href="#Spark-Shuffle" class="headerlink" title="Spark Shuffle"></a>Spark Shuffle</h2><p><a href="F:\Study\F-Spark\spark教案\2.SparkCore编程.docx" target="_blank" rel="noopener">SparkCore文件</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spark/" rel="tag"># Spark</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/30/Scala/" rel="next" title="Scala">
+                <i class="fa fa-chevron-left"></i> Scala
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/04/SparkSQL/" rel="prev" title="SparkSQL--漫漫之路">
+                SparkSQL--漫漫之路 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">yimting@aliyun.com</p>
+              <div class="site-description motion-element" itemprop="description">路漫漫其修远兮</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">6</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="mailto:yimting@aliyun.com" title="E-Mail &rarr; mailto:yimting@aliyun.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SparkCore学习之路"><span class="nav-number">1.</span> <span class="nav-text">SparkCore学习之路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Spark"><span class="nav-number">1.1.</span> <span class="nav-text">什么是Spark</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-与-Hadoop-MR-之间的关系"><span class="nav-number">1.1.1.</span> <span class="nav-text">Spark 与 Hadoop(MR) 之间的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SparkShuffle-与-MR-shuffle-的区别"><span class="nav-number">1.2.</span> <span class="nav-text">SparkShuffle 与 MR shuffle 的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark整体框架-执行原理"><span class="nav-number">1.3.</span> <span class="nav-text">Spark整体框架+执行原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark的集群"><span class="nav-number">1.3.1.</span> <span class="nav-text">Spark的集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#spark集群启动流程："><span class="nav-number">1.3.2.</span> <span class="nav-text">spark集群启动流程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark提交任务流程："><span class="nav-number">1.3.3.</span> <span class="nav-text">Spark提交任务流程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark任务执行流程"><span class="nav-number">1.3.4.</span> <span class="nav-text">Spark任务执行流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注意点："><span class="nav-number">1.3.4.1.</span> <span class="nav-text">注意点：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SparkCore中的三大概念"><span class="nav-number">1.4.</span> <span class="nav-text">SparkCore中的三大概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDD-弹性的分布式数据集"><span class="nav-number">1.4.1.</span> <span class="nav-text">RDD(弹性的分布式数据集)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RDD的依赖关系"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">RDD的依赖关系</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Stage-的划分依据"><span class="nav-number">1.4.1.1.1.</span> <span class="nav-text">Stage 的划分依据</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Spark-Core操作"><span class="nav-number">1.4.2.</span> <span class="nav-text">Spark Core操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#共享变量"><span class="nav-number">1.4.2.1.</span> <span class="nav-text">共享变量</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#广播变量-broadcast"><span class="nav-number">1.4.2.1.1.</span> <span class="nav-text">广播变量( broadcast)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#累加器-Accumulator"><span class="nav-number">1.4.2.1.2.</span> <span class="nav-text">累加器( Accumulator )</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分区"><span class="nav-number">1.4.2.2.</span> <span class="nav-text">分区</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CheckPoint-amp-amp-Cache"><span class="nav-number">1.4.3.</span> <span class="nav-text">CheckPoint &amp;&amp; Cache</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CheckPoint"><span class="nav-number">1.4.3.1.</span> <span class="nav-text">CheckPoint</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存"><span class="nav-number">1.4.3.2.</span> <span class="nav-text">缓存</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDD的常见算子操作"><span class="nav-number">1.4.4.</span> <span class="nav-text">RDD的常见算子操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#好多算子的对比"><span class="nav-number">1.4.5.</span> <span class="nav-text">好多算子的对比</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spark-Shuffle"><span class="nav-number">1.5.</span> <span class="nav-text">Spark Shuffle</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yimting@aliyun.com</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.1.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.0"></script>
+
+  <script src="/js/motion.js?v=7.1.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/schemes/muse.js?v=7.1.0"></script>
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.0"></script>
+<script src="/js/post-details.js?v=7.1.0"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.0"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  <script>
+    (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      bp.src = (curProtocol === 'https') ? 'https://zz.bdstatic.com/linksubmit/push.js' : 'http://push.zhanzhang.baidu.com/push.js';
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+    })();
+  </script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
