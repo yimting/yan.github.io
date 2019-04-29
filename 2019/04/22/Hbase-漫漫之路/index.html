@@ -109,7 +109,7 @@
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/HBaseArchitecture-Blog-Fig4.png">
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/删除原理.png">
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/删除表.png">
-<meta property="og:updated_time" content="2019-04-22T13:05:29.148Z">
+<meta property="og:updated_time" content="2019-04-23T14:05:25.254Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hbase--漫漫之路">
 <meta name="twitter:description" content="摘要：HBase是一种 “NoSQL” 数据库. NoSQL是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。">
@@ -377,12 +377,24 @@
                 
               
 
-              <time title="创建时间：2019-04-22 00:03:28 / 修改时间：21:05:29" itemprop="dateCreated datePublished" datetime="2019-04-22T00:03:28+08:00">2019-04-22</time>
+              <time title="创建时间：2019-04-22 00:03:28" itemprop="dateCreated datePublished" datetime="2019-04-22T00:03:28+08:00">2019-04-22</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-04-23 22:05:25" itemprop="dateModified" datetime="2019-04-23T22:05:25+08:00">2019-04-23</time>
               
             
           </span>
@@ -487,7 +499,7 @@
 <h2 id="Hbase的存储过程"><a href="#Hbase的存储过程" class="headerlink" title="Hbase的存储过程"></a>Hbase的存储过程</h2><p>在Hbase的架构中，存在如下几个组件操作</p>
 <ol>
 <li>预写日志 ： WAL （write ahead log），所有的客户端进行写入操作的时候，会先将操作的日志写入到WAL中</li>
-<li>MeMStore ： 当缓存达到一行阈值的时候，会进行 <code>flush</code>操作，会将 MeMStore中数据， 一些到 磁盘中（HDFS），也叫做 存储文件【 Store File （HFile<a href="一个StoreFile对应着一个HFile。而HFile是存储在HDFS之上的。">^1</a>）】</li>
+<li>MeMStore ： 当缓存达到一行阈值的时候，会进行 <code>flush</code>操作，会将 MeMStore中数据， 一些到 磁盘中（HDFS），也叫做 存储文件【 Store File （HFile<a href="一个StoreFile对应着一个HFile。HFile是存储在HDFS之上的。">^1</a>）】</li>
 <li>当溢写本地的 HFile 数量达到一行阈值的时候，会进行合并操作，合并成一个更大的 StoreFile ， 当StoreFile 大小达到一行阈值的时候，再次进行 split 操作，将 region 划分成两个</li>
 <li>HMaster 会把其中一个 Region 分发到其他的 RegionServer 上，从而实现 服务器的 负载均衡</li>
 </ol>
@@ -550,7 +562,7 @@
 <ul>
 <li>对于表的操作 <em>表名，行和列需要添加引号</em></li>
 </ul>
-<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">create <span class="string">'test'</span>,<span class="string">'cf'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create <span class="string">'test'</span>,<span class="string">'cf'</span></span><br><span class="line">-- 指定表保存到哪个命名空间，并创建一个 f1 的列簇</span><br><span class="line">create <span class="string">'example:test'</span>,<span class="string">'f1'</span></span><br></pre></td></tr></table></figure>
 <table>
 <thead>
 <tr>
@@ -748,7 +760,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-count">11</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -792,7 +804,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">6</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
