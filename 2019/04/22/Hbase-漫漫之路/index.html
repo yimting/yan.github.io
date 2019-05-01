@@ -109,7 +109,7 @@
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/HBaseArchitecture-Blog-Fig4.png">
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/删除原理.png">
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/删除表.png">
-<meta property="og:updated_time" content="2019-04-23T14:05:25.254Z">
+<meta property="og:updated_time" content="2019-05-01T12:34:23.825Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hbase--漫漫之路">
 <meta name="twitter:description" content="摘要：HBase是一种 “NoSQL” 数据库. NoSQL是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。">
@@ -394,7 +394,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-04-23 22:05:25" itemprop="dateModified" datetime="2019-04-23T22:05:25+08:00">2019-04-23</time>
+                <time title="修改时间：2019-05-01 20:34:23" itemprop="dateModified" datetime="2019-05-01T20:34:23+08:00">2019-05-01</time>
               
             
           </span>
@@ -450,7 +450,104 @@
 <p>摘要：HBase是一种 “NoSQL” 数据库. <code>NoSQL</code>是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。<a id="more"></a></p>
 </blockquote>
 <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><h2 id="Hbase是什么"><a href="#Hbase是什么" class="headerlink" title="Hbase是什么"></a>Hbase是什么</h2><p>​    HBase是一种构建与Hadoop架构之上的 <code>NoSQL</code> 数据库. <code>NoSQL</code>是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。有许多种 NoSQL 数据库: BerkeleyDB 是本地 NoSQL 数据库例子, 而 HBase 是大型分布式数据库。 技术上来说, HBase 更像是”数据存储(Data Store)” 多于 “数据库(Data Base)”。因为缺少很多RDBMS特性, 如列类型，第二索引，触发器，高级查询语言等.</p>
-<p>​    然而, HBase 有许多特征同时支持线性化和模块化扩充。 HBase 集群通过增加RegionServers进行扩充。 它可以放在普通的服务器中。例如，如果集群从10个扩充到20个RegionServer，存储空间和处理容量都同时翻倍。 RDBMS 也能很好扩充， 但仅对一个点 - 特别是对一个单独数据库服务器的大小 - 同时，为了更好的性能，需要特殊的硬件和存储设备。 HBase 特性：</p>
+<p>​    然而, HBase 有许多特征同时支持线性化和模块化扩充。 HBase 集群通过增加RegionServers进行扩充。 它可以放在普通的服务器中。例如，如果集群从10个扩充到20个RegionServer，存储空间和处理容量都同时翻倍。 RDBMS 也能很好扩充， 但仅对一个点 - 特别是对一个单独数据库服务器的大小 - 同时，为了更好的性能，需要特殊的硬件和存储设备。<br>同时，HBase 是一个多行三列的存储方式(列存储方式)</p>
+<blockquote>
+<p>第一列： RowKey<br>第二列： Properties<br>第三列： value</p>
+</blockquote>
+<p>例如：</p>
+<ul>
+<li>行式存储</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>学号</th>
+<th>姓名</th>
+<th>年龄</th>
+<th>班级</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>zhangsan</td>
+<td></td>
+<td>3</td>
+</tr>
+<tr>
+<td>2</td>
+<td>lisi</td>
+<td></td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>wangwu</td>
+<td>2</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>列式存储</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>RowKey</th>
+<th>Properties</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>姓名</td>
+<td>zhangsan</td>
+</tr>
+<tr>
+<td>1</td>
+<td>年龄</td>
+<td>17</td>
+</tr>
+<tr>
+<td>1</td>
+<td>班级</td>
+<td>3</td>
+</tr>
+<tr>
+<td>2</td>
+<td>年龄</td>
+<td>20</td>
+</tr>
+<tr>
+<td>2</td>
+<td>班级</td>
+<td>2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>姓名</td>
+<td>lisi</td>
+</tr>
+<tr>
+<td>3</td>
+<td>姓名</td>
+<td>wangwu</td>
+</tr>
+<tr>
+<td>3</td>
+<td>年龄</td>
+<td>24</td>
+</tr>
+<tr>
+<td>3</td>
+<td>班级</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p> HBase 特性：</p>
 <ul>
 <li>强一致性读写: HBase 不是 “最终一致性(eventually consistent)” 数据存储. 这让它很适合高速计数聚合类任务。</li>
 <li>自动分片(Automatic sharding): HBase 表通过region分布在集群中。数据增长时，region会自动分割并重新分布。</li>
