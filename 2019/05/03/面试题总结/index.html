@@ -106,7 +106,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yimting.github.io/2019/05/03/面试题总结/Servlet.jpg">
 <meta property="og:image" content="http://yimting.github.io/2019/05/03/面试题总结/001.jpg">
-<meta property="og:updated_time" content="2019-05-03T15:50:23.194Z">
+<meta property="og:updated_time" content="2019-05-04T15:45:32.830Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题总结">
 <meta name="twitter:description" content="摘要：一些面试的总结，不断更新……">
@@ -374,12 +374,24 @@
                 
               
 
-              <time title="创建时间：2019-05-03 22:50:47 / 修改时间：23:50:23" itemprop="dateCreated datePublished" datetime="2019-05-03T22:50:47+08:00">2019-05-03</time>
+              <time title="创建时间：2019-05-03 22:50:47" itemprop="dateCreated datePublished" datetime="2019-05-03T22:50:47+08:00">2019-05-03</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-04 23:45:32" itemprop="dateModified" datetime="2019-05-04T23:45:32+08:00">2019-05-04</time>
               
             
           </span>
@@ -472,17 +484,40 @@
 <ol start="14">
 <li><p><strong>Redis,RDBM,HBase,Hive 之间的区别</strong></p>
 <blockquote>
-<ul>
-<li>Redis是k-v型数据库，目标是做高效的分布式缓存。数据一般不实时落地。也不适合做存储和分析。</li>
-<li>HBase是列式数据库，BigTable的一种实现，目标是高效存储大量数据，支持列压缩，行事务。</li>
-<li>Hive是数据仓库，并不是一个具体的数据库的存在。是为了简化编写MR程序而生的。</li>
-<li>Redis为内存型KV系统，处理的数据量要小于HBase</li>
-<li>Redis的还在于它不像HBase只支持简单的字符串，还支持集合set，有序集合zset和哈希hash</li>
-<li></li>
-</ul>
+<p>Redis是k-v型数据库，目标是做高效的分布式缓存。数据一般不实时落地。也不适合做存储和分析。</p>
+<p>HBase是列式数据库，BigTable的一种实现，目标是高效存储大量数据，支持列压缩，行事务。</p>
+<p>Hive是数据仓库，并不是一个具体的数据库的存在。是为了简化编写MR程序而生的。</p>
+<p>Redis为内存型KV系统，处理的数据量要小于HBase</p>
+<p>Redis的还在于它不像HBase只支持简单的字符串，还支持集合set，有序集合zset和哈希hash</p>
 </blockquote>
 </li>
 <li><p><strong>RDD，DS，DF之间的区别与联系，内部实现，相互转换</strong></p>
+<blockquote>
+<p><strong>共性</strong>：</p>
+<p>​    RDD、DataFrame、Dataset全都是spark平台下的分布式弹性数据集，为处理超大型数据提供便利</p>
+<p>​    三者都有惰性机制，在进行创建、转换，不会立即执行，只有在遇到Action如foreach时，三者才会开始遍历运算。</p>
+<p>​    三者都会根据spark的内存情况自动缓存运算，这样即使数据量很大，也不用担心会内存溢出</p>
+<p>​    三者都有partition的概念</p>
+<p>​    三种方式存在着许多相同的函数操作</p>
+<p><strong>区别</strong> :</p>
+<p>​    </p>
+<ul>
+<li>RDD :</li>
+<li>RDD一般使用sparkCore下面的算子对数据集进行的处理</li>
+<li>RDD不支持sparksql操作</li>
+<li>DataFrame :</li>
+<li>与RDD和Dataset不同，DataFrame每一行的类型固定为Row，只有通过解析才能获取各个字段的值</li>
+<li>DataFrame与Dataset支持一些特别方便的保存方式，比如保存成csv</li>
+<li>DataFrame与Dataset均支持sparksql的操作，比如select，groupby之类，还能注册临时表/视窗</li>
+<li>DataSet：</li>
+<li>DataFrame也可以叫Dataset[Row],每一行的类型是Row。</li>
+<li>而Dataset中，每一行是什么类型是不一定的，尤其实在自定义了case class了之后</li>
+</ul>
+<p><strong>转换</strong>：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment">//DataFrame/Dataset转RDD：</span></span><br><span class="line">&gt; <span class="comment">//这个转换很简单</span></span><br><span class="line">&gt; <span class="keyword">val</span> rdd1=testDF.rdd</span><br><span class="line">&gt; <span class="keyword">val</span> rdd2=testDS.rdd</span><br><span class="line">&gt; </span><br><span class="line">&gt; <span class="comment">//RDD转DataFrame：</span></span><br><span class="line">&gt; <span class="keyword">import</span> spark.implicits._</span><br><span class="line">&gt; <span class="keyword">val</span> testDF = rdd.map &#123;line=&gt;</span><br><span class="line">&gt;       (line._1,line._2)</span><br><span class="line">&gt;     &#125;.toDF(<span class="string">"col1"</span>,<span class="string">"col2"</span>)</span><br><span class="line">&gt; </span><br><span class="line">&gt; <span class="comment">//一般用元组把一行的数据写在一起，然后在toDF中指定字段名</span></span><br><span class="line">&gt; </span><br><span class="line">&gt; <span class="comment">//RDD转Dataset：</span></span><br><span class="line">&gt; <span class="keyword">import</span> spark.implicits._</span><br><span class="line">&gt; <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Coltest</span>(<span class="params">col1:<span class="type">String</span>,col2:<span class="type">Int</span></span>)<span class="keyword">extends</span> <span class="title">Serializable</span> <span class="title">//定义字段名和类型</span></span></span><br><span class="line"><span class="class"><span class="title">&gt;</span> <span class="title">val</span> <span class="title">testDS</span> </span>= rdd.map &#123;line=&gt;</span><br><span class="line">&gt;       <span class="type">Coltest</span>(line._1,line._2)</span><br><span class="line">&gt;     &#125;.toDS</span><br><span class="line">&gt; <span class="comment">//可以注意到，定义每一行的类型（case class）时，已经给出了字段名和类型，后面只要往case class里面添加值即可</span></span><br><span class="line">&gt; </span><br><span class="line">&gt; <span class="comment">//Dataset转DataFrame：</span></span><br><span class="line">&gt; <span class="comment">//这个也很简单，因为只是把case class封装成Row</span></span><br><span class="line">&gt; <span class="keyword">import</span> spark.implicits._</span><br><span class="line">&gt; <span class="keyword">val</span> testDF = testDS.toDF</span><br><span class="line">&gt; </span><br><span class="line">&gt; <span class="comment">//DataFrame转Dataset：</span></span><br><span class="line">&gt; <span class="keyword">import</span> spark.implicits._</span><br><span class="line">&gt; <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">Coltest</span>(<span class="params">col1:<span class="type">String</span>,col2:<span class="type">Int</span></span>)<span class="keyword">extends</span> <span class="title">Serializable</span> <span class="title">//定义字段名和类型</span></span></span><br><span class="line"><span class="class"><span class="title">&gt;</span> <span class="title">val</span> <span class="title">testDS</span> </span>= testDF.as[<span class="type">Coltest</span>]</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+</blockquote>
 </li>
 <li><p><strong>设计日志收集分析系统</strong></p>
 </li>
@@ -659,6 +694,20 @@
 <p>（可选) 如果读取的是HDFS数据，那么会有一个优位置。</p>
 </blockquote>
 </li>
+<li><p>Scala柯里化</p>
+</li>
+<li>Scala隐式转换（spark的排序）</li>
+<li>值传递和引用传递</li>
+<li>jdk的gc</li>
+<li>jdk内存模型</li>
+<li>多线程获取线程结果</li>
+<li>ArrayList、LinkList</li>
+<li>Spark宽窄依赖</li>
+<li>Spark内存模型</li>
+<li>sql行列互转</li>
+<li>find 文件内容</li>
+<li>linux统计端口使用个数和列表</li>
+<li>项目流程、数据量、数据倾斜、故障案例、高可靠设计、调优等等</li>
 </ol>
 <p>[^1]: On-Line Transaction Processing<a href="https://baike.baidu.com/item/%E8%81%94%E6%9C%BA%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86" target="_blank" rel="noopener">联机事务处理</a>过程(OLTP)也称为面向交易的处理过程，其基本特征是前台接收的用户数据可以立即传送到计算中心进行处理，并在很短的时间内给出处理结果，是对用户操作快速响应的方式之一。<br>[^2]: 联机分析处理 (OLAP) , OLAP的目标是满足决策支持或者满足在多维环境下特定的查询和报表需求,它的技术核心是”维”这个概念。</p>
 
