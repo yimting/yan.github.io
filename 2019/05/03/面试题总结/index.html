@@ -106,7 +106,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yimting.github.io/2019/05/03/面试题总结/Servlet.jpg">
 <meta property="og:image" content="http://yimting.github.io/2019/05/03/面试题总结/001.jpg">
-<meta property="og:updated_time" content="2019-05-06T06:01:38.875Z">
+<meta property="og:updated_time" content="2019-05-17T09:51:39.387Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题总结">
 <meta name="twitter:description" content="摘要：一些面试的总结，不断更新……">
@@ -391,7 +391,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-06 14:01:38" itemprop="dateModified" datetime="2019-05-06T14:01:38+08:00">2019-05-06</time>
+                <time title="修改时间：2019-05-17 17:51:39" itemprop="dateModified" datetime="2019-05-17T17:51:39+08:00">2019-05-17</time>
               
             
           </span>
@@ -453,7 +453,32 @@
 </ol>
 <ol start="2">
 <li><p><strong><a href="https://www.cnblogs.com/yuanblog/p/4441017.html" target="_blank" rel="noopener">Java HashMap 实现原理</a></strong></p>
+<blockquote>
+<p>HashMap是基于哈希表的Map接口的非同步实现。此实现提供所有可选的映射操作，并允许使用null值和null键。此类不保证映射的顺序，特别是它不保证该顺序恒久不变。</p>
+<p>HashMap实际上是一个“链表散列”的数据结构，即数组和链表的结合体。</p>
+</blockquote>
+<p>!(盗图)[<a href="https://dl.iteye.com/upload/picture/pic/63364/042032ea-6f15-3428-bfb4-b3b1460769a7.jpg" target="_blank" rel="noopener">https://dl.iteye.com/upload/picture/pic/63364/042032ea-6f15-3428-bfb4-b3b1460769a7.jpg</a>]</p>
+<blockquote>
+<p>从上图中可以看出，HashMap底层就是一个数组结构，数组中的每一项又是一个链表。当新建一个HashMap的时候，就会初始化一个数组。</p>
+</blockquote>
+<blockquote>
+<p>存储: (  HashMap允许存放null键和null值。)</p>
+<p>根据hash值得到这个元素在数组中的位置（即下标），如果数组该位置上已经存放有其他元素了，那么在这个位置上的元素将以链表的形式存放，新加入的放在链头，最先加入的放在链尾。如果数组该位置上没有元素，就直接将该元素放到此数组中的该位置上。</p>
+<p>读取：</p>
+<p>从HashMap中get元素时，首先计算key的hashCode，找到数组中对应位置的某一元素，然后通过key的equals方法在对应位置的链表中找到需要的元素。</p>
+</blockquote>
+<blockquote>
+<p><strong>总结：HashMap的实现原理：</strong></p>
+<ol>
+<li><strong>利用key的hashCode重新hash计算出当前对象的元素在数组中的下标</strong></li>
+<li><strong>存储时，如果出现hash值相同的key，此时有两种情况。(1)如果key相同，则覆盖原始值；(2)如果key不同（出现冲突），则将当前的key-value放入链表中</strong></li>
+<li><strong>获取时，直接找到hash值对应的下标，在进一步判断key是否相同，从而找到对应值。</strong></li>
+<li><strong>理解了以上过程就不难明白HashMap是如何解决hash冲突的问题，核心就是使用了数组的存储方式，然后将冲突的key的对象放入链表中，一旦发现冲突就在链表中做进一步的对比。</strong></li>
+</ol>
+</blockquote>
 </li>
+</ol>
+<ol start="3">
 <li><p><strong>Java Servlet<a href="https://www.runoob.com/servlet/servlet-life-cycle.html" target="_blank" rel="noopener">生命周期</a>和每个过程</strong></p>
 <ul>
 <li>架构图：</li>
@@ -463,9 +488,33 @@
 <li><p><strong>使用shell，编程实现 a.txt 文件中有多行记录，查找包含“Available do” 的记录，如果记录超过10条，则输出符合条件的记录</strong></p>
 </li>
 <li><p><strong>HDFS上传文件命令，文件上传流程</strong></p>
+<blockquote>
+<p>hdfs dfs -put ‘FilePath’</p>
+<ol>
+<li>客户端申请上传文件，namenode检查元数据中是否存在该文件，如果没有，返会信息可以上传</li>
+<li>客户端收到可以上传的信息，将文件切成块（Block 128M），切成 x 块，除去最后一块大小不一定，其他块大小一致</li>
+<li>客户端拿到 第一个块 ，向 namenode 提交上传信息，namenode 将应该上传到哪几个的 datanode地址 返回给客户端。</li>
+<li>客户端收到 datanode 地址，进行 socket 流的方式进行上传到 距离客户端最近的 datanode 中， 之后这台 datanode 节点会进行 block1 进行备份，将该块进行复制到其他的 datanode 中 </li>
+<li>当 datanode 所有块，传输完毕之后，会返回客户端 block1 上传成功。</li>
+<li>循环以上 block 上传的过程</li>
+</ol>
+</blockquote>
 </li>
 <li><p><strong>Spark reduceByKey 和 groupByKey 实现原理，有什么区别。</strong></p>
+<blockquote>
+<ol>
+<li>reduceByKey(func[,num Tasks])</li>
+</ol>
+<p>当键值相同的键值对(K,V)数据集调用此方法，他们的键对应的值会根据指定的函数(func)进行聚合，而键值(V,V)也进行合并，返回键值(V)，最终返回一个键值对(K,V)数据集。当然，你也可以通过可选参数num Tasks，指定任务执行的次数。</p>
+<ol start="2">
+<li>groupByKey([num Tasks])</li>
+</ol>
+<p>当键值对(K,V)数据集调用此方法，会返回一个键值对(K, Iterable)数据集，其中键值是原来键值组成的、可遍历的集合。我们也可以通过num Tasks参数指定任务执行的次数。</p>
+</blockquote>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> words = <span class="type">Array</span>(<span class="string">"one"</span>, <span class="string">"two"</span>, <span class="string">"two"</span>, <span class="string">"three"</span>, <span class="string">"three"</span>, <span class="string">"three"</span>)</span><br><span class="line"><span class="keyword">val</span> wordPairsRDD = sc.parallelize(words).map(word =&gt; (word, <span class="number">1</span>))</span><br><span class="line"><span class="keyword">val</span> wordCountsWithReduce = wordPairsRDD.reduceByKey(_ + _).collect()</span><br><span class="line"><span class="keyword">val</span> wordCountsWithGroup = wordPairsRDD.groupByKey().map(t =&gt; (t._1, t._2.sum)).collect()</span><br><span class="line"><span class="comment">//尽管两个函数都能得到正确的结果，但是reduceByKey更适合作用在较大的数据集上，因为在对数据进行转换时，Spark知道在每个分区上可以对这些键值进行合并输出。</span></span><br></pre></td></tr></table></figure>
 </li>
+</ol>
+<ol start="7">
 <li><p><strong>Spark任务有几种提交部署模式，每种模式的特点是什么。</strong></p>
 </li>
 <li><p><strong>有一个存储 Int 型的数字文件，大小为2G ， 设计一个查询服务，用户输入一个数字返回是否在文件中出现过，列出实现思路</strong></p>
@@ -696,18 +745,105 @@
 </li>
 <li><p>Scala柯里化</p>
 </li>
-<li>Scala隐式转换（spark的排序）</li>
-<li>值传递和引用传递</li>
-<li>jdk的gc</li>
-<li>jdk内存模型</li>
-<li>多线程获取线程结果</li>
-<li>ArrayList、LinkList</li>
-<li>Spark宽窄依赖</li>
-<li>Spark内存模型</li>
-<li>sql行列互转</li>
-<li>find 文件内容</li>
-<li>linux统计端口使用个数和列表</li>
-<li>项目流程、数据量、数据倾斜、故障案例、高可靠设计、调优等等</li>
+<li><p>Scala隐式转换（spark的排序）</p>
+</li>
+<li><p>值传递和引用传递</p>
+</li>
+<li><p><strong>JVM的gc</strong></p>
+<p>JAVA中有一套完整的对于回收堆内存的一个机制，被我们称为垃圾回收机制，也被称为GC。</p>
+<p>在GC中有两个启动的方式，第一种是 System.gc 第二种是 系统自行判断是否进行清理</p>
+</li>
+<li><p>JVM内存模型</p>
+</li>
+<li><p>多线程获取线程结果</p>
+</li>
+<li><p>ArrayList、LinkList</p>
+</li>
+<li><p><strong>Spark宽窄依赖</strong></p>
+<blockquote>
+<p>宽依赖：指的是父RDD的分区可以被多个子RDD的分区所使用</p>
+<p>窄依赖：指的是父RDD的分区最多只能被一个子RDD的分区所使用</p>
+</blockquote>
+</li>
+<li><p><a href="https://www.cnblogs.com/qingyunzong/p/8955141.html" target="_blank" rel="noopener"><strong>Spark内存模型</strong></a></p>
+</li>
+<li><p><strong>sql 的行列互转</strong></p>
+<blockquote>
+</blockquote>
+</li>
+<li><p><strong>hive行列互转</strong></p>
+<blockquote>
+<ol>
+<li><p>行转列</p>
+<p>select id,</p>
+<p>from table</p>
+<p>lateral view explode( splect (列名，‘,‘’)) as 虚拟列名 ；</p>
+</li>
+<li><p>列转行</p>
+<p>select id , </p>
+<p>concat_ws( collect_set / collect_list ( 列名 )) as coumln</p>
+<p>from table group by id ;</p>
+</li>
+</ol>
+</blockquote>
+</li>
+<li><p><strong>find 文件内容</strong></p>
+<blockquote>
+<p>将目前目录及其子目录下所有延伸档名是 c 的文件列出来。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment"># find . -name "*.c"</span></span><br><span class="line">&gt; </span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>将目前目录其其下子目录中所有一般文件列出</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; </span><br><span class="line">&gt; <span class="comment"># find . -type f</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>将目前目录及其子目录下所有最近 20 天内更新过的文件列出</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment"># find . -ctime -20</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>查找/var/log目录中更改时间在7日以前的普通文件，并在删除之前询问它们：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment"># find /var/log -type f -mtime +7 -ok rm &#123;&#125; \;</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>查找前目录中文件属主具有读、写权限，并且文件所属组的用户和其他用户具有读权限的文件：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment"># find . -type f -perm 644 -exec ls -l &#123;&#125; \;</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>为了查找系统中所有文件长度为0的普通文件，并列出它们的完整路径：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="comment"># find / -type f -size 0 -exec ls -l &#123;&#125; \;</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>linux统计端口使用个数和列表</p>
+</li>
+<li><p>项目流程、数据量、数据倾斜、故障案例、高可靠设计、调优等等</p>
+</li>
+<li><p><strong>Hive中的排序关键字有哪些</strong></p>
+<blockquote>
+<p><strong>sort by :  </strong>order by ，cluster by ，distribute by<br><strong>sort by ：</strong>不是全局排序，其在数据进入reducer前完成排序<br><strong>order by ：</strong>会对输入做全局排序，因此只有一个reducer(多个reducer无法保证全局有序).只有一个<strong>reducer   :  </strong>会导致当输入规模较大时，需要较长的计算时间。<br><strong>cluster by ：</strong>当distribute by 和sort by的字段相同时，等同于cluster by.可以看做特殊的distribute + sort<br><strong>distribute by :</strong> 按照指定的字段对数据进行划分输出到不同的reduce中</p>
+</blockquote>
+</li>
+<li><p><strong>Kafka如何保证消息不丢失，不重复</strong></p>
+<blockquote>
+<p><strong>数据不重复：</strong></p>
+<pre><code>**使用的是exactly-once策略**
+生产者和消费者都可以使用这种策略
+1、幂等：他内部对数据进行了标识（具体怎么标识的不清楚），保证数据结果只收到一次，就是生产者只接收完整数据并存储一次，消费者也是只接收一次完整结果。
+2、事务：对于生产者来说，就是客户端和接收端之间建立事务，通过事务对接，如果有一方出现错误情况则数据全部回滚重新写入，直到成功为止
+    对于消费者来说，就是消费数据和偏移量之间建立事务，通过事务的对接，如果有一方出现错误情况则数据全部回滚重新写入，直到消费数据和偏移量保持一致，则保证数据消费成功
+</code></pre></blockquote>
+<blockquote>
+<p><strong>不丢失：</strong></p>
+<pre><code>**生产者：ACK机制**
+ack机制：broker表示发来的数据已确认接收无误，表示数据已经保存到磁盘。
+0：不等待broker返回确认消息
+1：等待topic中某个partition leader保存成功的状态反馈
+-1：等待topic中某个partition 所有副本都保存成功的状态反馈
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; ack机制是对于Producer生产数据到kafka消息队列的一个机制</span><br><span class="line">&gt; 当返回0的时候，是我们生产完数据到broker，不做任何等待就直接确认</span><br><span class="line">&gt; 当返回1的时候，是数据生产到leader的kafka消息队列完成后，返回成功的状态（1）</span><br><span class="line">&gt; 当返回-1的时候，是数据生产到leader和follower节点副本备份全部都完成之后，再返回成功状态（all）</span><br><span class="line">&gt; 消费者：</span><br><span class="line">&gt; 	消费者对于数据不丢失就是对偏移量的维护，通过以上为了保证数据不丢失，我们可以将偏移量设置为数据消费完成后进行偏移量的更新。这样有可能存在数据重复消费的情况，所以我们可以通过上面所说的事务来保证数据不会重复消费的情况。</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><blockquote>
+</blockquote>
+</li>
 </ol>
 <p>[^1]: On-Line Transaction Processing<a href="https://baike.baidu.com/item/%E8%81%94%E6%9C%BA%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86" target="_blank" rel="noopener">联机事务处理</a>过程(OLTP)也称为面向交易的处理过程，其基本特征是前台接收的用户数据可以立即传送到计算中心进行处理，并在很短的时间内给出处理结果，是对用户操作快速响应的方式之一。<br>[^2]: 联机分析处理 (OLAP) , OLAP的目标是满足决策支持或者满足在多维环境下特定的查询和报表需求,它的技术核心是”维”这个概念。</p>
 

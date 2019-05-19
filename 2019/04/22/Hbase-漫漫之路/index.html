@@ -109,7 +109,7 @@
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/HBaseArchitecture-Blog-Fig4.png">
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/删除原理.png">
 <meta property="og:image" content="http://yimting.github.io/2019/04/22/Hbase-漫漫之路/删除表.png">
-<meta property="og:updated_time" content="2019-05-01T12:34:23.825Z">
+<meta property="og:updated_time" content="2019-05-09T13:32:09.288Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hbase--漫漫之路">
 <meta name="twitter:description" content="摘要：HBase是一种 “NoSQL” 数据库. NoSQL是一个通用词表示数据库不是RDBMS ，后者支持 SQL 作为主要访问手段。">
@@ -394,7 +394,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-01 20:34:23" itemprop="dateModified" datetime="2019-05-01T20:34:23+08:00">2019-05-01</time>
+                <time title="修改时间：2019-05-09 21:32:09" itemprop="dateModified" datetime="2019-05-09T21:32:09+08:00">2019-05-09</time>
               
             
           </span>
@@ -564,6 +564,11 @@
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://ip_addr:16010</span><br></pre></td></tr></table></figure>
 <p><img src="/2019/04/22/Hbase-漫漫之路/WebUi.png" alt="webui"></p>
 <h2 id="Hbase的架构是什么"><a href="#Hbase的架构是什么" class="headerlink" title="Hbase的架构是什么"></a>Hbase的架构是什么</h2><p><img src="/2019/04/22/Hbase-漫漫之路/架构.png" alt="架构图"></p>
+<blockquote>
+<p>自我理解：</p>
+<p>在 Hbase中拥有多个客户端 （ region Server ），每一个 region Server 中负责表中一部分的数据(region)，<br>当你在查询的时候，会将查询出来的结果保存到 region Server 的缓存中，<br>每个 region Server 的数据范围是一个（ region ） ，当你使用的过程中 regionServer 出现宕机行为，如何处理 ？Hbase 会对于操作进行一个记录，保存到 HDFS 的 WAL log 日志中，这个WAL 日志会进行定时进行合并操作， </p>
+<p>那么如果region Server比较多 通过谁来管理呢 （HMaster），HMaster 通过 Zookeeper 进行管理（ 不能直接管理 region Server ） region Server （小弟），<br>小弟去进行管理数据表</p>
+</blockquote>
 <p><strong>Client</strong></p>
 <ul>
 <li>包含访问Hbase的接口并且维护cache从而加快对Hbase的访问</li>
