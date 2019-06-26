@@ -106,7 +106,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yimting.github.io/2019/05/03/面试题总结/Servlet.jpg">
 <meta property="og:image" content="http://yimting.github.io/2019/05/03/面试题总结/001.jpg">
-<meta property="og:updated_time" content="2019-05-17T09:51:39.387Z">
+<meta property="og:updated_time" content="2019-06-02T07:13:10.520Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题总结">
 <meta name="twitter:description" content="摘要：一些面试的总结，不断更新……">
@@ -391,7 +391,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2019-05-17 17:51:39" itemprop="dateModified" datetime="2019-05-17T17:51:39+08:00">2019-05-17</time>
+                <time title="修改时间：2019-06-02 15:13:10" itemprop="dateModified" datetime="2019-06-02T15:13:10+08:00">2019-06-02</time>
               
             
           </span>
@@ -841,8 +841,10 @@ ack机制：broker表示发来的数据已确认接收无误，表示数据已�
 </code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; ack机制是对于Producer生产数据到kafka消息队列的一个机制</span><br><span class="line">&gt; 当返回0的时候，是我们生产完数据到broker，不做任何等待就直接确认</span><br><span class="line">&gt; 当返回1的时候，是数据生产到leader的kafka消息队列完成后，返回成功的状态（1）</span><br><span class="line">&gt; 当返回-1的时候，是数据生产到leader和follower节点副本备份全部都完成之后，再返回成功状态（all）</span><br><span class="line">&gt; 消费者：</span><br><span class="line">&gt; 	消费者对于数据不丢失就是对偏移量的维护，通过以上为了保证数据不丢失，我们可以将偏移量设置为数据消费完成后进行偏移量的更新。这样有可能存在数据重复消费的情况，所以我们可以通过上面所说的事务来保证数据不会重复消费的情况。</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
 </blockquote>
 </li>
-<li><blockquote>
-</blockquote>
+<li><p>Spark中对于数组中的值进行排序  <em>Array((“ali”,6),(“baidu”,5),(“Ten”,8))</em></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">  <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(<span class="keyword">new</span> <span class="type">SparkConf</span>().setAppName(<span class="keyword">this</span>.getClass.getName).setMaster(<span class="string">"local[*]"</span>))</span><br><span class="line">  <span class="keyword">val</span> rdd = sc.makeRDD(<span class="type">Array</span>((<span class="string">"ali"</span>,<span class="number">6</span>),(<span class="string">"baidu"</span>,<span class="number">5</span>),(<span class="string">"Ten"</span>,<span class="number">8</span>)))</span><br><span class="line">  rdd.map(x =&gt; (x._1,x._2).swap).sortByKey(<span class="literal">false</span>,<span class="number">1</span>).foreach(println)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>result：</p>
+<p>(8,Ten)<br>(6,ali)<br>(5,baidu)</p>
 </li>
 </ol>
 <p>[^1]: On-Line Transaction Processing<a href="https://baike.baidu.com/item/%E8%81%94%E6%9C%BA%E4%BA%8B%E5%8A%A1%E5%A4%84%E7%90%86" target="_blank" rel="noopener">联机事务处理</a>过程(OLTP)也称为面向交易的处理过程，其基本特征是前台接收的用户数据可以立即传送到计算中心进行处理，并在很短的时间内给出处理结果，是对用户操作快速响应的方式之一。<br>[^2]: 联机分析处理 (OLAP) , OLAP的目标是满足决策支持或者满足在多维环境下特定的查询和报表需求,它的技术核心是”维”这个概念。</p>
@@ -895,6 +897,10 @@ ack机制：broker表示发来的数据已确认接收无误，表示数据已�
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/26/WL面试/" rel="prev" title="WL面试">
+                WL面试 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -954,7 +960,7 @@ ack机制：broker表示发来的数据已确认接收无误，表示数据已�
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-count">13</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
